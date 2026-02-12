@@ -79,7 +79,7 @@ export default function Philosophy() {
     }, []);
 
     return (
-        <section ref={sectionRef} className="h-screen w-full flex flex-col justify-center px-6 sm:px-12 md:px-24 lg:px-32 overflow-hidden">
+        <section ref={sectionRef} id="philosophy" className="h-screen w-full flex flex-col justify-center px-6 sm:px-12 md:px-24 lg:px-32 overflow-hidden">
             <div className="philosophy-inner w-full flex flex-col items-end">
                 <h2
                     ref={headingRef}
