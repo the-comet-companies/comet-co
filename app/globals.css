@@ -1,0 +1,242 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --color-neutral-50: #f9fafb;
+  --color-neutral-100: #f3f4f6;
+  --color-neutral-200: #e5e7eb;
+  --color-neutral-300: #d1d5db;
+  --color-neutral-400: #9ca3af;
+  --color-neutral-500: #6b7280;
+  --color-neutral-600: #4b5563;
+  --color-neutral-700: #374151;
+  --color-neutral-800: #1f2937;
+  --color-neutral-900: #111827;
+  --color-black: #000000;
+  --color-white: #ffffff;
+}
+
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    /* Let GSAP handle scroll — remove scroll-behavior: smooth to prevent conflicts */
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background-color: var(--color-neutral-50);
+    color: var(--color-black);
+    overflow-x: hidden;
+    animation: pageReveal 0.8s ease-out forwards;
+  }
+
+  @keyframes pageReveal {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  ::selection {
+    background-color: var(--color-black);
+    color: var(--color-white);
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* ===== Scroll Progress Bar ===== */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  background: var(--color-black);
+  z-index: 9999;
+  transform-origin: left;
+  will-change: transform;
+  pointer-events: none;
+}
+
+/* ===== Text Reveal Clip ===== */
+.text-reveal-line {
+  overflow: hidden;
+  display: block;
+}
+
+.text-reveal-line>span {
+  display: inline-block;
+  will-change: transform;
+}
+
+/* ===== Horizontal Rule Animation ===== */
+.hr-animated {
+  transform-origin: left;
+  transform: scaleX(0);
+  will-change: transform;
+}
+
+/* ===== Grain Texture Overlay ===== */
+.grain-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9998;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 128px 128px;
+}
+
+/* ===== Magnetic Hover on Portfolio Items ===== */
+.portfolio-item {
+  position: relative;
+  will-change: transform;
+}
+
+.portfolio-item::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--color-black);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.portfolio-item:hover::after {
+  transform: scaleX(1);
+}
+
+/* ===== Section Divider ===== */
+.section-divider {
+  width: 100%;
+  height: 1px;
+  background: var(--color-neutral-200);
+  transform-origin: left;
+  transform: scaleX(0);
+}
+
+/* ===== Scroll Down Indicator ===== */
+.scroll-indicator {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.scroll-indicator-line {
+  width: 1px;
+  height: 40px;
+  background: var(--color-neutral-300);
+  transform-origin: top;
+  overflow: hidden;
+  position: relative;
+}
+
+.scroll-indicator-line::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--color-black);
+  animation: scrollPulse 2s ease-in-out infinite;
+}
+
+@keyframes scrollPulse {
+  0% {
+    transform: translateY(-100%);
+  }
+
+  50% {
+    transform: translateY(0%);
+  }
+
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+/* ===== Philosophy statement hover ===== */
+.philosophy-statement {
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.philosophy-section:hover .philosophy-statement {
+  opacity: 0.3;
+}
+
+.philosophy-section:hover .philosophy-statement:hover {
+  opacity: 1;
+  transform: translateX(-8px);
+}
+
+/* ===== Contact email link ===== */
+.email-link {
+  position: relative;
+  display: inline-block;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.email-link::before {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--color-black);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.email-link:hover::before {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.email-link:hover {
+  transform: translateX(8px);
+}
+
+/* ===== Footer Reveal ===== */
+.footer-content {
+  opacity: 0;
+  transform: translateY(12px);
+}
+
+/* ===== Counter number animation ===== */
+.counter-number {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ===== Smooth mask reveal for sections ===== */
+.mask-reveal {
+  clip-path: inset(0 0 100% 0);
+  will-change: clip-path;
+}
