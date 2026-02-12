@@ -60,111 +60,245 @@
   }
 }
 
-/* ===== Scroll Progress Bar ===== */
-.scroll-progress {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 2px;
-  background: var(--color-black);
-  z-index: 9999;
-  transform-origin: left;
-  will-change: transform;
-  pointer-events: none;
-}
+@layer components {
 
-/* ===== Text Reveal Clip ===== */
-.text-reveal-line {
-  overflow: hidden;
-  display: block;
-}
+  /* ===== Scroll Progress Bar ===== */
+  .scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 2px;
+    background: var(--color-black);
+    z-index: 9999;
+    transform-origin: left;
+    will-change: transform;
+    pointer-events: none;
+  }
 
-.text-reveal-line>span {
-  display: inline-block;
-  will-change: transform;
-}
+  /* ===== Text Reveal Clip ===== */
+  .text-reveal-line {
+    overflow: hidden;
+    display: block;
+  }
 
-/* ===== Horizontal Rule Animation ===== */
-.hr-animated {
-  transform-origin: left;
-  transform: scaleX(0);
-  will-change: transform;
-}
+  .text-reveal-line>span {
+    display: inline-block;
+    will-change: transform;
+  }
 
-/* ===== Grain Texture Overlay ===== */
-.grain-overlay {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 9998;
-  opacity: 0.025;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-repeat: repeat;
-  background-size: 128px 128px;
-}
+  /* ===== Horizontal Rule Animation ===== */
+  .hr-animated {
+    transform-origin: left;
+    transform: scaleX(0);
+    will-change: transform;
+  }
 
-/* ===== Magnetic Hover on Portfolio Items ===== */
-.portfolio-item {
-  position: relative;
-  will-change: transform;
-}
+  /* ===== Grain Texture Overlay ===== */
+  .grain-overlay {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9998;
+    opacity: 0.025;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 128px 128px;
+  }
 
-.portfolio-item::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 1px;
-  background: var(--color-black);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-}
+  /* ===== Magnetic Hover on Portfolio Items ===== */
+  .portfolio-item {
+    position: relative;
+    will-change: transform;
+  }
 
-.portfolio-item:hover::after {
-  transform: scaleX(1);
-}
+  .portfolio-item::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 1px;
+    background: var(--color-black);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
 
-/* ===== Section Divider ===== */
-.section-divider {
-  width: 100%;
-  height: 1px;
-  background: var(--color-neutral-200);
-  transform-origin: left;
-  transform: scaleX(0);
-}
+  .portfolio-item:hover::after {
+    transform: scaleX(1);
+  }
 
-/* ===== Scroll Down Indicator ===== */
-.scroll-indicator {
-  position: absolute;
-  bottom: 2rem;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-}
+  /* ===== Section Divider ===== */
+  .section-divider {
+    width: 100%;
+    height: 1px;
+    background: var(--color-neutral-200);
+    transform-origin: left;
+    transform: scaleX(0);
+  }
 
-.scroll-indicator-line {
-  width: 1px;
-  height: 40px;
-  background: var(--color-neutral-300);
-  transform-origin: top;
-  overflow: hidden;
-  position: relative;
-}
+  /* ===== Scroll Down Indicator ===== */
+  .scroll-indicator {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
 
-.scroll-indicator-line::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: var(--color-black);
-  animation: scrollPulse 2s ease-in-out infinite;
+  .scroll-indicator-line {
+    width: 1px;
+    height: 40px;
+    background: var(--color-neutral-300);
+    transform-origin: top;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .scroll-indicator-line::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--color-black);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+
+  /* ===== Philosophy Grid ===== */
+  .philosophy-card {
+    will-change: width, background, border-color, padding, border-radius, transform, opacity;
+  }
+
+  /* ===== Contact email link ===== */
+  .email-link {
+    position: relative;
+    display: inline-block;
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .email-link::before {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--color-black);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .email-link:hover::before {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  .email-link:hover {
+    transform: translateX(8px);
+  }
+
+  /* ===== Contact Form ===== */
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 4rem;
+  }
+
+  .contact-input,
+  .contact-textarea {
+    width: 100%;
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #111827;
+    background: transparent;
+    border: none;
+    border-bottom: 1.5px solid #d1d5db;
+    padding: 0.75rem 0;
+    outline: none;
+    transition: border-color 0.3s ease;
+    appearance: none;
+    -webkit-appearance: none;
+    border-radius: 0;
+  }
+
+  .contact-input::placeholder,
+  .contact-textarea::placeholder {
+    color: #d1d5db;
+    font-weight: 400;
+  }
+
+  .contact-input:focus,
+  .contact-textarea:focus {
+    border-bottom-color: #000;
+  }
+
+  .contact-textarea {
+    resize: vertical;
+    min-height: 120px;
+    line-height: 1.7;
+  }
+
+  /* Select arrow */
+  select.contact-input {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%239ca3af' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0 center;
+    padding-right: 1.5rem;
+  }
+
+  .contact-submit {
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    padding: 1rem 2.5rem;
+    background: #000;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+      opacity 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .contact-submit:hover {
+    transform: translateY(-2px);
+    opacity: 0.85;
+  }
+
+  .contact-submit:hover span {
+    transform: translateX(4px);
+  }
+
+  .contact-submit:active {
+    transform: translateY(0);
+  }
+
+  /* ===== Footer Reveal ===== */
+  .footer-content {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  /* ===== Counter number animation ===== */
+  .counter-number {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ===== Smooth mask reveal for sections ===== */
+  .mask-reveal {
+    clip-path: inset(0 0 100% 0);
+    will-change: clip-path;
+  }
 }
 
 @keyframes scrollPulse {
@@ -181,62 +315,21 @@
   }
 }
 
-/* ===== Philosophy statement hover ===== */
-.philosophy-statement {
-  transition: opacity 0.4s ease, transform 0.4s ease;
+@media (max-width: 768px) {
+  .contact-grid {
+    grid-template-columns: 1fr !important;
+    gap: 3rem !important;
+  }
+
+  .philosophy-grid {
+    grid-template-columns: 1fr !important;
+  }
 }
 
-.philosophy-section:hover .philosophy-statement {
-  opacity: 0.3;
-}
 
-.philosophy-section:hover .philosophy-statement:hover {
-  opacity: 1;
-  transform: translateX(-8px);
-}
-
-/* ===== Contact email link ===== */
-.email-link {
-  position: relative;
-  display: inline-block;
-  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.email-link::before {
-  content: '';
-  position: absolute;
-  bottom: -4px;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background: var(--color-black);
-  transform: scaleX(0);
-  transform-origin: right;
-  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.email-link:hover::before {
-  transform: scaleX(1);
-  transform-origin: left;
-}
-
-.email-link:hover {
-  transform: translateX(8px);
-}
-
-/* ===== Footer Reveal ===== */
-.footer-content {
-  opacity: 0;
-  transform: translateY(12px);
-}
-
-/* ===== Counter number animation ===== */
-.counter-number {
-  font-variant-numeric: tabular-nums;
-}
-
-/* ===== Smooth mask reveal for sections ===== */
-.mask-reveal {
-  clip-path: inset(0 0 100% 0);
-  will-change: clip-path;
+@media (max-width: 480px) {
+  .contact-form-row {
+    grid-template-columns: 1fr !important;
+    gap: 2rem !important;
+  }
 }

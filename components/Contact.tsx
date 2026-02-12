@@ -1,24 +1,52 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState, FormEvent } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
+const SUBJECT_OPTIONS = [
+    "General Inquiry",
+    "Partnership Opportunity",
+    "Investment Discussion",
+    "Media & Press",
+    "Careers",
+    "Other",
+];
+
 export default function Contact() {
     const sectionRef = useRef<HTMLElement>(null);
-    const labelRef = useRef<HTMLHeadingElement>(null);
-    const subRef = useRef<HTMLParagraphElement>(null);
-    const emailRef = useRef<HTMLAnchorElement>(null);
     const topBorderRef = useRef<HTMLDivElement>(null);
+    const leftColRef = useRef<HTMLDivElement>(null);
+    const rightColRef = useRef<HTMLDivElement>(null);
+
+    const [form, setForm] = useState({
+        name: "",
+        email: "",
+        subject: "",
+        message: "",
+    });
+
+    const handleChange = (
+        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    ) => {
+        setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    };
+
+    const handleSubmit = (e: FormEvent) => {
+        e.preventDefault();
+        const subjectLine = form.subject || "General Inquiry";
+        const body = `Name: ${form.name}%0D%0A%0D%0A${form.message}`;
+        window.location.href = `mailto:hello@thecometcompanies.com?subject=${encodeURIComponent(subjectLine)}&body=${body}`;
+    };
 
     useEffect(() => {
         const el = sectionRef.current;
         if (!el) return;
 
         const ctx = gsap.context(() => {
-            // Animate the top border line
+            // Animated top border
             gsap.fromTo(
                 topBorderRef.current,
                 { scaleX: 0 },
@@ -34,112 +62,240 @@ export default function Contact() {
                 }
             );
 
-            // Label fades in
-            gsap.fromTo(
-                labelRef.current,
-                { opacity: 0, y: 15 },
-                {
-                    opacity: 1,
-                    y: 0,
-                    duration: 0.9,
-                    ease: "power3.out",
-                    scrollTrigger: {
-                        trigger: el,
-                        start: "top 85%",
-                        once: true,
-                    },
-                }
-            );
+            // Left column — text/info
+            if (leftColRef.current) {
+                const leftElements = leftColRef.current.querySelectorAll("[data-reveal]");
+                gsap.fromTo(
+                    Array.from(leftElements),
+                    { opacity: 0, y: 30 },
+                    {
+                        opacity: 1,
+                        y: 0,
+                        duration: 0.8,
+                        stagger: 0.1,
+                        ease: "power3.out",
+                        scrollTrigger: {
+                            trigger: el,
+                            start: "top 80%",
+                            once: true,
+                        },
+                    }
+                );
+            }
 
-            // Sub text fades in
-            gsap.fromTo(
-                subRef.current,
-                { opacity: 0, y: 15 },
-                {
-                    opacity: 1,
-                    y: 0,
-                    duration: 0.9,
-                    delay: 0.15,
-                    ease: "power3.out",
-                    scrollTrigger: {
-                        trigger: el,
-                        start: "top 85%",
-                        once: true,
-                    },
-                }
-            );
-
-            // Email link reveals with scale and clip
-            gsap.fromTo(
-                emailRef.current,
-                { opacity: 0, y: 40, clipPath: "inset(0 0 100% 0)" },
-                {
-                    opacity: 1,
-                    y: 0,
-                    clipPath: "inset(0 0 0% 0)",
-                    duration: 1.2,
-                    delay: 0.3,
-                    ease: "power3.out",
-                    scrollTrigger: {
-                        trigger: el,
-                        start: "top 80%",
-                        once: true,
-                    },
-                }
-            );
-
-            // On scroll past, slight parallax push up
-            gsap.to(emailRef.current, {
-                y: -20,
-                ease: "none",
-                scrollTrigger: {
-                    trigger: el,
-                    start: "top center",
-                    end: "bottom top",
-                    scrub: 0.5,
-                },
-            });
+            // Right column — form
+            if (rightColRef.current) {
+                const rightElements = rightColRef.current.querySelectorAll("[data-reveal]");
+                gsap.fromTo(
+                    Array.from(rightElements),
+                    { opacity: 0, y: 25 },
+                    {
+                        opacity: 1,
+                        y: 0,
+                        duration: 0.7,
+                        stagger: 0.08,
+                        delay: 0.2,
+                        ease: "power3.out",
+                        scrollTrigger: {
+                            trigger: el,
+                            start: "top 80%",
+                            once: true,
+                        },
+                    }
+                );
+            }
         }, el);
 
         return () => ctx.revert();
     }, []);
 
     return (
-        <section ref={sectionRef} className="px-6 py-28 sm:px-12 md:px-24 md:py-36 lg:px-32 overflow-hidden">
+        <section
+            ref={sectionRef}
+            className="px-6 py-28 sm:px-12 md:px-24 md:py-36 lg:px-32 overflow-hidden"
+            id="contact"
+        >
             {/* Animated top border */}
             <div
                 ref={topBorderRef}
-                className="w-full h-px bg-neutral-200 mb-12 origin-left"
+                className="w-full h-px bg-neutral-200 mb-20 origin-left"
                 style={{ transform: "scaleX(0)" }}
             />
 
-            <div className="w-full">
-                <h2
-                    ref={labelRef}
-                    className="mb-3 font-sans text-[10px] font-bold uppercase tracking-[0.25em] text-neutral-400"
-                    style={{ opacity: 0 }}
-                >
-                    Start a conversation.
-                </h2>
+            <div className="contact-grid" style={{ maxWidth: "1400px", margin: "0 auto" }}>
+                {/* ── Left Column — Info ── */}
+                <div ref={leftColRef} className="flex flex-col gap-12">
+                    <div className="max-w-md">
+                        <h2
+                            data-reveal
+                            style={{
+                                fontFamily: "var(--font-sans)",
+                                fontSize: "0.625rem",
+                                fontWeight: 700,
+                                textTransform: "uppercase",
+                                letterSpacing: "0.25em",
+                                color: "#9ca3af",
+                                marginBottom: "1.5rem",
+                                opacity: 0,
+                            }}
+                        >
+                            Get in Touch
+                        </h2>
 
-                <p
-                    ref={subRef}
-                    className="mb-16 font-sans text-[11px] font-normal text-neutral-400 tracking-wide"
-                    style={{ opacity: 0 }}
-                >
-                    Serious inquiries only.
-                </p>
+                        <p
+                            data-reveal
+                            style={{
+                                fontFamily: "var(--font-sans)",
+                                fontSize: "clamp(2rem, 5vw, 4rem)",
+                                fontWeight: 800,
+                                lineHeight: 1,
+                                letterSpacing: "-0.03em",
+                                color: "#111827",
+                                opacity: 0,
+                            }}
+                        >
+                            Let&apos;s build something
+                            <br />
+                            together.
+                        </p>
+                    </div>
 
-                <a
-                    ref={emailRef}
-                    href="mailto:hello@thecometcompanies.com"
-                    className="email-link block font-sans text-3xl font-medium text-neutral-900 sm:text-5xl md:text-6xl lg:text-7xl break-all sm:break-normal"
-                    style={{ opacity: 0 }}
-                >
-                    hello@
-                    <br className="hidden sm:block" />
-                    thecometcompanies.com
-                </a>
+                    <div data-reveal style={{ opacity: 0 }}>
+                        <h4
+                            style={{
+                                fontFamily: "var(--font-sans)",
+                                fontSize: "0.6rem",
+                                fontWeight: 700,
+                                textTransform: "uppercase",
+                                letterSpacing: "0.2em",
+                                color: "#9ca3af",
+                                marginBottom: "1rem",
+                            }}
+                        >
+                            Direct Inquiries
+                        </h4>
+                        <a
+                            href="mailto:hello@thecometcompanies.com"
+                            className="email-link relative inline-block text-xl sm:text-2xl font-bold text-neutral-900 tracking-tight"
+                            style={{ textDecoration: "none" }}
+                        >
+                            hello@thecometcompanies.com
+                        </a>
+
+                        <p
+                            style={{
+                                fontFamily: "var(--font-sans)",
+                                fontSize: "0.7rem",
+                                fontWeight: 500,
+                                color: "#9ca3af",
+                                marginTop: "1.5rem",
+                                letterSpacing: "0.05em",
+                            }}
+                        >
+                            Serious inquiries only.
+                        </p>
+                    </div>
+                </div>
+
+                {/* ── Right Column — Form ── */}
+                <div ref={rightColRef}>
+                    <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "2.5rem" }}>
+                        {/* Name + Email row */}
+                        <div data-reveal style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.5rem", opacity: 0 }} className="contact-form-row">
+                            <div>
+                                <label
+                                    htmlFor="contact-name"
+                                    className="block mb-2 text-[0.6rem] font-bold uppercase tracking-[0.2em] text-neutral-400"
+                                >
+                                    Name
+                                </label>
+                                <input
+                                    id="contact-name"
+                                    name="name"
+                                    type="text"
+                                    required
+                                    value={form.name}
+                                    onChange={handleChange}
+                                    placeholder="Your full name"
+                                    className="contact-input"
+                                />
+                            </div>
+                            <div>
+                                <label
+                                    htmlFor="contact-email"
+                                    className="block mb-2 text-[0.6rem] font-bold uppercase tracking-[0.2em] text-neutral-400"
+                                >
+                                    Email
+                                </label>
+                                <input
+                                    id="contact-email"
+                                    name="email"
+                                    type="email"
+                                    required
+                                    value={form.email}
+                                    onChange={handleChange}
+                                    placeholder="your@email.com"
+                                    className="contact-input"
+                                />
+                            </div>
+                        </div>
+
+                        {/* Subject */}
+                        <div data-reveal style={{ opacity: 0 }}>
+                            <label
+                                htmlFor="contact-subject"
+                                className="block mb-2 text-[0.6rem] font-bold uppercase tracking-[0.2em] text-neutral-400"
+                            >
+                                Subject
+                            </label>
+                            <select
+                                id="contact-subject"
+                                name="subject"
+                                value={form.subject}
+                                onChange={handleChange}
+                                className="contact-input"
+                                style={{ cursor: "pointer" }}
+                            >
+                                <option value="" disabled>
+                                    Select a topic
+                                </option>
+                                {SUBJECT_OPTIONS.map((opt) => (
+                                    <option key={opt} value={opt}>
+                                        {opt}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+
+                        {/* Message */}
+                        <div data-reveal style={{ opacity: 0 }}>
+                            <label
+                                htmlFor="contact-message"
+                                className="block mb-2 text-[0.6rem] font-bold uppercase tracking-[0.2em] text-neutral-400"
+                            >
+                                Message
+                            </label>
+                            <textarea
+                                id="contact-message"
+                                name="message"
+                                required
+                                value={form.message}
+                                onChange={handleChange}
+                                placeholder="Tell us about your project or inquiry..."
+                                rows={5}
+                                className="contact-textarea"
+                            />
+                        </div>
+
+                        {/* Submit */}
+                        <div data-reveal style={{ opacity: 0 }}>
+                            <button type="submit" className="contact-submit w-full sm:w-auto">
+                                Send Message
+                                <span style={{ marginLeft: "0.75rem", transition: "transform 0.3s ease" }}>→</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </section>
     );

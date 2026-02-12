@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import FooterAnimation from "@/components/FooterAnimation";
 import Scene3D from "@/components/Scene3D";
+import Navbar from "@/components/Navbar";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -25,6 +26,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.variable} antialiased`}>
         <Scene3D />
+        <Navbar />
         {children}
         <FooterAnimation />
       </body>

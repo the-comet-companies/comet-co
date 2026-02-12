@@ -78,15 +78,14 @@ export default function Hero() {
                     scrollTrigger: {
                         trigger: containerRef.current,
                         start: "top top", // Start when hero hits top
-                        end: "+=300%", // Pin for 300% of viewport height
+                        end: "+=150%", // Pin for 150% of viewport height
                         pin: true,     // Pin the section
                         scrub: 1,      // Smooth scrubbing
                         // markers: true, // Debug
                     }
                 });
 
-                // 1. Turn to Outline (Solid wipes away)
-                // Sequentially per word
+                // Solid → Outline (plays once on the way down)
                 solidLayers.forEach((layer) => {
                     tl.to(layer, {
                         clipPath: "inset(0 100% 0 0)", // Wipe right to hide solid
@@ -94,46 +93,38 @@ export default function Hero() {
                         ease: "none"
                     });
                 });
-
-                // 2. Pause briefly in fully outlined state
-                tl.to({}, { duration: 0.5 });
-
-                // 3. Turn back to Solid (Solid wipes back)
-                // Sequentially per word or all together? User said "back to the solid after all words are finished"
-                // Let's do sequentially again for symmetry
-                solidLayers.forEach((layer) => {
-                    tl.to(layer, {
-                        clipPath: "inset(0 0% 0 0)", // Wipe left to show solid
-                        duration: 1,
-                        ease: "none"
-                    });
-                });
             }
 
-            // Fade subtext out faster/during the pin
-            gsap.to(subtextRef.current, {
-                opacity: 0,
-                y: -20,
-                scrollTrigger: {
-                    trigger: containerRef.current,
-                    start: "top top", // Start fading as soon as we pin
-                    end: "+=50%",   // Reduce opacity over the first part of the scroll
-                    scrub: true,
-                },
-                immediateRender: false
-            });
+            // Fade subtext out during the pin — fromTo ensures clean reversal
+            gsap.fromTo(subtextRef.current,
+                { opacity: 1, y: 0 },
+                {
+                    opacity: 0,
+                    y: -20,
+                    scrollTrigger: {
+                        trigger: containerRef.current,
+                        start: "top top",
+                        end: "+=50%",
+                        scrub: true,
+                    },
+                    immediateRender: false,
+                }
+            );
 
             // Fade indicator out
-            gsap.to(indicatorRef.current, {
-                opacity: 0,
-                scrollTrigger: {
-                    trigger: containerRef.current,
-                    start: "top top",
-                    end: "+=20%",
-                    scrub: true
-                },
-                immediateRender: false
-            });
+            gsap.fromTo(indicatorRef.current,
+                { opacity: 1 },
+                {
+                    opacity: 0,
+                    scrollTrigger: {
+                        trigger: containerRef.current,
+                        start: "top top",
+                        end: "+=20%",
+                        scrub: true,
+                    },
+                    immediateRender: false,
+                }
+            );
 
         }, containerRef);
 
@@ -148,6 +139,7 @@ export default function Hero() {
             // Removed min-h-[1XXvh] because framing is handled by pin duration
             // Removed sticky class
             className="relative flex h-screen w-full flex-col justify-center md:justify-start md:pt-20 px-6 sm:px-12 md:px-24 lg:px-32 overflow-hidden"
+            id="home"
         >
             {/* Curtain overlay */}
             <div
