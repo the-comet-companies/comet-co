@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -8,14 +8,15 @@ import { portfolioItems } from "@/lib/data";
 
 gsap.registerPlugin(ScrollTrigger);
 
+const FALLBACK_IMAGE = "/placeholder.svg";
+
 export default function Portfolio() {
     const containerRef = useRef<HTMLElement>(null);
     const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
 
     useEffect(() => {
         const ctx = gsap.context(() => {
-            // Staggered reveal on scroll
-            cardsRef.current.forEach((card, index) => {
+            cardsRef.current.forEach((card) => {
                 if (!card) return;
 
                 gsap.fromTo(
@@ -63,7 +64,7 @@ export default function Portfolio() {
                 </h2>
             </div>
 
-            {/* Grid */}
+            {/* Grid — 2 columns for 6 items (3 rows) */}
             <div
                 style={{
                     display: "grid",
@@ -75,149 +76,12 @@ export default function Portfolio() {
                 }}
             >
                 {portfolioItems.map((item, index) => (
-                    <div
+                    <PortfolioCard
                         key={item.slug}
+                        item={item}
+                        index={index}
                         ref={(el) => { cardsRef.current[index] = el; }}
-                        style={{ opacity: 0 }}
-                    >
-                        <Link href={`/portfolio/${item.slug}`} style={{ textDecoration: "none", color: "inherit" }}>
-                            <div
-                                style={{
-                                    position: "relative",
-                                    overflow: "hidden",
-                                    background: "#fafafa",
-                                    cursor: "pointer",
-                                    minHeight: "clamp(280px, 40vh, 420px)",
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    justifyContent: "flex-end",
-                                    padding: "2.5rem",
-                                }}
-                                className="portfolio-grid-card"
-                                onMouseEnter={(e) => {
-                                    const card = e.currentTarget;
-                                    const img = card.querySelector("[data-bg]") as HTMLElement;
-                                    const overlay = card.querySelector("[data-overlay]") as HTMLElement;
-                                    const arrow = card.querySelector("[data-arrow]") as HTMLElement;
-
-                                    if (img) gsap.to(img, { opacity: 1, scale: 1.05, duration: 0.6, ease: "power2.out" });
-                                    if (overlay) gsap.to(overlay, { opacity: 1, duration: 0.4 });
-                                    if (arrow) gsap.to(arrow, { opacity: 1, x: 0, duration: 0.4, ease: "power3.out" });
-
-                                    // Turn text white
-                                    const texts = card.querySelectorAll("[data-text]");
-                                    texts.forEach((t) => gsap.to(t, { color: "#fff", duration: 0.3 }));
-                                }}
-                                onMouseLeave={(e) => {
-                                    const card = e.currentTarget;
-                                    const img = card.querySelector("[data-bg]") as HTMLElement;
-                                    const overlay = card.querySelector("[data-overlay]") as HTMLElement;
-                                    const arrow = card.querySelector("[data-arrow]") as HTMLElement;
-
-                                    if (img) gsap.to(img, { opacity: 0, scale: 1, duration: 0.5, ease: "power2.out" });
-                                    if (overlay) gsap.to(overlay, { opacity: 0, duration: 0.4 });
-                                    if (arrow) gsap.to(arrow, { opacity: 0, x: -10, duration: 0.3 });
-
-                                    // Revert text
-                                    const nameEl = card.querySelector("[data-name]") as HTMLElement;
-                                    const tagEl = card.querySelector("[data-tag]") as HTMLElement;
-                                    const idxEl = card.querySelector("[data-idx]") as HTMLElement;
-                                    if (nameEl) gsap.to(nameEl, { color: "#111827", duration: 0.3 });
-                                    if (tagEl) gsap.to(tagEl, { color: "#6b7280", duration: 0.3 });
-                                    if (idxEl) gsap.to(idxEl, { color: "#9ca3af", duration: 0.3 });
-                                }}
-                            >
-                                {/* Background image — hidden by default */}
-                                <div
-                                    data-bg
-                                    style={{
-                                        position: "absolute",
-                                        inset: 0,
-                                        backgroundImage: `url(${item.image})`,
-                                        backgroundSize: "cover",
-                                        backgroundPosition: "center",
-                                        opacity: 0,
-                                        willChange: "transform, opacity",
-                                    }}
-                                />
-
-                                {/* Dark overlay for text legibility on hover */}
-                                <div
-                                    data-overlay
-                                    style={{
-                                        position: "absolute",
-                                        inset: 0,
-                                        background: "rgba(0, 0, 0, 0.55)",
-                                        opacity: 0,
-                                    }}
-                                />
-
-                                {/* Content (always visible) */}
-                                <div style={{ position: "relative", zIndex: 1 }}>
-                                    <span
-                                        data-text
-                                        data-idx
-                                        style={{
-                                            display: "block",
-                                            fontFamily: "var(--font-sans)",
-                                            fontSize: "0.65rem",
-                                            fontWeight: 600,
-                                            letterSpacing: "0.2em",
-                                            color: "#9ca3af",
-                                            marginBottom: "1.5rem",
-                                        }}
-                                    >
-                                        {String(index + 1).padStart(2, "0")}
-                                    </span>
-
-                                    <h3
-                                        data-text
-                                        data-name
-                                        style={{
-                                            fontFamily: "var(--font-sans)",
-                                            fontSize: "clamp(1.5rem, 3vw, 2.5rem)",
-                                            fontWeight: 800,
-                                            textTransform: "uppercase",
-                                            letterSpacing: "-0.02em",
-                                            lineHeight: 1,
-                                            color: "#111827",
-                                            marginBottom: "0.75rem",
-                                        }}
-                                    >
-                                        {item.name}
-                                    </h3>
-
-                                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                                        <p
-                                            data-text
-                                            data-tag
-                                            style={{
-                                                fontFamily: "var(--font-sans)",
-                                                fontSize: "0.85rem",
-                                                fontWeight: 500,
-                                                color: "#6b7280",
-                                            }}
-                                        >
-                                            {item.tagline}
-                                        </p>
-
-                                        {/* Arrow — hidden by default, slides in on hover */}
-                                        <span
-                                            data-arrow
-                                            style={{
-                                                fontSize: "1.25rem",
-                                                color: "#fff",
-                                                opacity: 0,
-                                                transform: "translateX(-10px)",
-                                            }}
-                                        >
-                                            →
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </Link>
-                    </div>
+                    />
                 ))}
             </div>
 
@@ -237,3 +101,187 @@ export default function Portfolio() {
         </section>
     );
 }
+
+import { forwardRef } from "react";
+
+interface PortfolioCardProps {
+    item: (typeof portfolioItems)[number];
+    index: number;
+}
+
+const PortfolioCard = forwardRef<HTMLDivElement, PortfolioCardProps>(
+    function PortfolioCard({ item, index }, ref) {
+        const [imgSrc, setImgSrc] = useState(item.screenshot || FALLBACK_IMAGE);
+
+        return (
+            <div ref={ref} style={{ opacity: 0 }}>
+                <Link href={`/portfolio/${item.slug}`} style={{ textDecoration: "none", color: "inherit" }}>
+                    <div
+                        style={{
+                            position: "relative",
+                            overflow: "hidden",
+                            background: "#fafafa",
+                            cursor: "pointer",
+                            minHeight: "clamp(280px, 40vh, 420px)",
+                            display: "flex",
+                            flexDirection: "column",
+                            justifyContent: "flex-end",
+                            padding: "2.5rem",
+                        }}
+                        className="portfolio-grid-card"
+                        onMouseEnter={(e) => {
+                            const card = e.currentTarget;
+                            const img = card.querySelector("[data-bg]") as HTMLElement;
+                            const overlay = card.querySelector("[data-overlay]") as HTMLElement;
+                            const arrow = card.querySelector("[data-arrow]") as HTMLElement;
+                            const urlEl = card.querySelector("[data-url]") as HTMLElement;
+
+                            if (img) gsap.to(img, { opacity: 1, scale: 1.05, duration: 0.6, ease: "power2.out" });
+                            if (overlay) gsap.to(overlay, { opacity: 1, duration: 0.4 });
+                            if (arrow) gsap.to(arrow, { opacity: 1, x: 0, duration: 0.4, ease: "power3.out" });
+                            if (urlEl) gsap.to(urlEl, { opacity: 1, y: 0, duration: 0.4, delay: 0.1, ease: "power3.out" });
+
+                            const texts = card.querySelectorAll("[data-text]");
+                            texts.forEach((t) => gsap.to(t, { color: "#fff", duration: 0.3 }));
+                        }}
+                        onMouseLeave={(e) => {
+                            const card = e.currentTarget;
+                            const img = card.querySelector("[data-bg]") as HTMLElement;
+                            const overlay = card.querySelector("[data-overlay]") as HTMLElement;
+                            const arrow = card.querySelector("[data-arrow]") as HTMLElement;
+                            const urlEl = card.querySelector("[data-url]") as HTMLElement;
+
+                            if (img) gsap.to(img, { opacity: 0, scale: 1, duration: 0.5, ease: "power2.out" });
+                            if (overlay) gsap.to(overlay, { opacity: 0, duration: 0.4 });
+                            if (arrow) gsap.to(arrow, { opacity: 0, x: -10, duration: 0.3 });
+                            if (urlEl) gsap.to(urlEl, { opacity: 0, y: 10, duration: 0.3 });
+
+                            const nameEl = card.querySelector("[data-name]") as HTMLElement;
+                            const tagEl = card.querySelector("[data-tag]") as HTMLElement;
+                            const idxEl = card.querySelector("[data-idx]") as HTMLElement;
+                            if (nameEl) gsap.to(nameEl, { color: "#111827", duration: 0.3 });
+                            if (tagEl) gsap.to(tagEl, { color: "#6b7280", duration: 0.3 });
+                            if (idxEl) gsap.to(idxEl, { color: "#9ca3af", duration: 0.3 });
+                        }}
+                    >
+                        {/* Background screenshot — hidden by default, revealed on hover */}
+                        <div
+                            data-bg
+                            style={{
+                                position: "absolute",
+                                inset: 0,
+                                backgroundImage: `url(${imgSrc})`,
+                                backgroundSize: "cover",
+                                backgroundPosition: "top center",
+                                opacity: 0,
+                                willChange: "transform, opacity",
+                            }}
+                        >
+                            {/* Hidden img for fallback detection */}
+                            <img
+                                src={item.screenshot}
+                                alt=""
+                                style={{ display: "none" }}
+                                onError={() => setImgSrc(FALLBACK_IMAGE)}
+                            />
+                        </div>
+
+                        {/* Dark overlay for text legibility on hover */}
+                        <div
+                            data-overlay
+                            style={{
+                                position: "absolute",
+                                inset: 0,
+                                background: "rgba(0, 0, 0, 0.55)",
+                                opacity: 0,
+                            }}
+                        />
+
+                        {/* Content (always visible) */}
+                        <div style={{ position: "relative", zIndex: 1 }}>
+                            <span
+                                data-text
+                                data-idx
+                                style={{
+                                    display: "block",
+                                    fontFamily: "var(--font-sans)",
+                                    fontSize: "0.65rem",
+                                    fontWeight: 600,
+                                    letterSpacing: "0.2em",
+                                    color: "#9ca3af",
+                                    marginBottom: "1.5rem",
+                                }}
+                            >
+                                {String(index + 1).padStart(2, "0")}
+                            </span>
+
+                            <h3
+                                data-text
+                                data-name
+                                style={{
+                                    fontFamily: "var(--font-sans)",
+                                    fontSize: "clamp(1.5rem, 3vw, 2.5rem)",
+                                    fontWeight: 800,
+                                    textTransform: "uppercase",
+                                    letterSpacing: "-0.02em",
+                                    lineHeight: 1,
+                                    color: "#111827",
+                                    marginBottom: "0.75rem",
+                                }}
+                            >
+                                {item.name}
+                            </h3>
+
+                            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                                <p
+                                    data-text
+                                    data-tag
+                                    style={{
+                                        fontFamily: "var(--font-sans)",
+                                        fontSize: "0.85rem",
+                                        fontWeight: 500,
+                                        color: "#6b7280",
+                                    }}
+                                >
+                                    {item.tagline}
+                                </p>
+
+                                {/* Arrow — hidden by default, slides in on hover */}
+                                <span
+                                    data-arrow
+                                    style={{
+                                        fontSize: "1.25rem",
+                                        color: "#fff",
+                                        opacity: 0,
+                                        transform: "translateX(-10px)",
+                                    }}
+                                >
+                                    →
+                                </span>
+                            </div>
+
+                            {/* URL label — appears on hover below tagline */}
+                            <span
+                                data-url
+                                style={{
+                                    display: "block",
+                                    marginTop: "0.75rem",
+                                    fontFamily: "var(--font-sans)",
+                                    fontSize: "0.7rem",
+                                    fontWeight: 600,
+                                    letterSpacing: "0.15em",
+                                    textTransform: "uppercase",
+                                    color: "rgba(255, 255, 255, 0.6)",
+                                    opacity: 0,
+                                    transform: "translateY(10px)",
+                                }}
+                            >
+                                {item.url.replace("https://", "")}
+                            </span>
+                        </div>
+                    </div>
+                </Link>
+            </div>
+        );
+    }
+);

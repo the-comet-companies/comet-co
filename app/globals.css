@@ -315,6 +315,28 @@
   }
 }
 
+@keyframes ping-slow {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  20% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+  40% {
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.5);
+  }
+}
+
+.animate-ping-slow {
+  animation: ping-slow 1.5s ease-out forwards;
+}
+
 @media (max-width: 768px) {
   .contact-grid {
     grid-template-columns: 1fr !important;

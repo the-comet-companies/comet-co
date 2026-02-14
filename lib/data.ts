@@ -6,53 +6,93 @@ export interface PortfolioItem {
     problemItSolves: string;
     cometRole: string;
     image: string;
+    screenshot: string;
+    url: string;
 }
 
 export const portfolioItems: PortfolioItem[] = [
     {
-        slug: "comet-logistics",
-        name: "Comet Logistics",
-        tagline: "Last-mile delivery infrastructure",
+        slug: "dtla-print",
+        name: "DTLA Print",
+        tagline: "Custom embroidery & screen printing",
         whatItDoes:
-            "Operates a network of regional last-mile delivery hubs for mid-market e-commerce.",
+            "Operates a high-quality custom embroidery and screen printing service for businesses and individuals in Downtown LA and beyond.",
         problemItSolves:
-            "Mid-market sellers lack reliable, cost-effective last-mile logistics outside major metros.",
+            "Businesses need reliable, high-quality custom apparel and branding solutions with fast turnaround times.",
         cometRole:
-            "Built from scratch. Comet owns and operates the full logistics stack.",
-        image: "/placeholder.svg",
+            "Full operator. Comet manages production, fulfillment, and client relationships end-to-end.",
+        image: "/portfolio/dtlaprint.png",
+        screenshot: "/portfolio/dtlaprint.png",
+        url: "https://dtlaprint.com",
     },
     {
-        slug: "comet-capital",
-        name: "Comet Capital",
-        tagline: "Permanent capital allocation",
+        slug: "kases",
+        name: "Kases",
+        tagline: "Premium phone cases & accessories",
         whatItDoes:
-            "Deploys patient capital into operating businesses with durable cash flows.",
+            "Designs and sells premium phone cases and tech accessories through a direct-to-consumer storefront.",
         problemItSolves:
-            "Most capital sources impose short time horizons on long-duration businesses.",
+            "Consumers want stylish, durable phone protection that stands out from generic mass-market options.",
         cometRole:
-            "Sole capital allocator. Comet manages the fund and portfolio directly.",
-        image: "/placeholder.svg",
+            "Built and operated from scratch. Comet handles product design, sourcing, and e-commerce operations.",
+        image: "/portfolio/kases.png",
+        screenshot: "/portfolio/kases.png",
+        url: "https://kases.com",
     },
     {
-        slug: "comet-industrial",
-        name: "Comet Industrial",
-        tagline: "Niche industrial services",
+        slug: "merch-karma",
+        name: "Merch Karma",
+        tagline: "Branded merchandise solutions",
         whatItDoes:
-            "Acquires and consolidates fragmented industrial service providers.",
+            "Provides end-to-end branded merchandise services — from design to production to fulfillment — for companies of all sizes.",
         problemItSolves:
-            "Fragmented markets produce inconsistent service quality and limited scale.",
-        cometRole: "Acquirer and operator. Comet integrates and manages each platform.",
-        image: "/placeholder.svg",
+            "Companies struggle to source consistent, high-quality branded merchandise without managing multiple vendors.",
+        cometRole:
+            "Full-stack operator. Comet manages the entire merchandise pipeline in-house.",
+        image: "/portfolio/merchkarma.png",
+        screenshot: "/portfolio/merchkarma.png",
+        url: "https://merchkarma.com",
     },
     {
-        slug: "comet-digital",
-        name: "Comet Digital",
-        tagline: "Internal tooling and infrastructure",
-        whatItDoes: "Builds software tools used across Comet portfolio companies.",
+        slug: "shop-titan",
+        name: "Shop Titan",
+        tagline: "E-commerce platform & tools",
+        whatItDoes:
+            "Powers online storefronts with integrated inventory, order management, and analytics tools for growing brands.",
         problemItSolves:
-            "Portfolio companies share common operational needs that off-the-shelf tools don't solve well.",
+            "Growing e-commerce brands need scalable infrastructure without the complexity of enterprise platforms.",
         cometRole:
-            "Internal product team. Comet builds and maintains all tools in-house.",
-        image: "/placeholder.svg",
+            "Internal product team. Comet builds and maintains the platform to serve portfolio brands.",
+        image: "/portfolio/shoptitan.png",
+        screenshot: "/portfolio/shoptitan.png",
+        url: "https://shoptitan.app",
+    },
+    {
+        slug: "mika-jaymes",
+        name: "Mika Jaymes",
+        tagline: "Luxury fashion brand",
+        whatItDoes:
+            "Curates and sells luxury fashion collections through a premium direct-to-consumer experience.",
+        problemItSolves:
+            "Fashion-forward consumers want access to curated luxury pieces without traditional retail markups.",
+        cometRole:
+            "Brand builder and operator. Comet manages creative direction, sourcing, and DTC operations.",
+        image: "/portfolio/mikajaymes.png",
+        screenshot: "/portfolio/mikajaymes.png",
+        url: "https://mikajaymes.com",
+    },
+    {
+        slug: "bluestar-cp",
+        name: "BlueStar CP",
+        tagline: "Multifamily property management",
+        whatItDoes:
+            "Manages multifamily residential properties with a focus on tenant experience and operational efficiency.",
+        problemItSolves:
+            "Multifamily property owners need professional management that maximizes occupancy while maintaining quality standards.",
+        cometRole:
+            "Upcoming project. Comet will build and operate the full property management platform.",
+        image: "/portfolio/bluestarcp.png",
+        screenshot: "/portfolio/bluestarcp.png",
+        url: "https://bluestarcp.com",
     },
 ];

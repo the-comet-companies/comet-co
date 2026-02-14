@@ -1,10 +1,12 @@
 "use client";
 
-import { useLayoutEffect, useRef, useEffect } from "react";
+import { useLayoutEffect, useRef, useEffect, useCallback } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
+
+const rotatingWords = ["AUTOMATED", "AI POWERED", "FOCUSED", "SCALABLE", "MINDFUL", "SUSTAINABLE"];
 
 export default function Hero() {
     const containerRef = useRef<HTMLElement>(null);
@@ -14,6 +16,20 @@ export default function Hero() {
     const indicatorRef = useRef<HTMLDivElement>(null);
     const overlayRef = useRef<HTMLDivElement>(null);
 
+    // Refs for rotating word spans (outline layer)
+    const outlineWordsRef = useRef<(HTMLSpanElement | null)[]>([]);
+    // Refs for rotating word spans (solid layer)
+    const solidWordsRef = useRef<(HTMLSpanElement | null)[]>([]);
+
+    const setOutlineWordRef = useCallback((el: HTMLSpanElement | null, i: number) => {
+        outlineWordsRef.current[i] = el;
+    }, []);
+
+    const setSolidWordRef = useCallback((el: HTMLSpanElement | null, i: number) => {
+        solidWordsRef.current[i] = el;
+    }, []);
+
+    // Entrance animation
     useLayoutEffect(() => {
         const ctx = gsap.context(() => {
             const tl = gsap.timeline({
@@ -27,20 +43,21 @@ export default function Hero() {
                 { scaleY: 0, duration: 1.2, ease: "power4.inOut" }
             );
 
-            // Entrance: Slide up solid words
+            // Text slides up after curtain
             const wordWrappers = headlineRef.current?.querySelectorAll(".word-wrapper");
             if (wordWrappers) {
                 tl.fromTo(
                     wordWrappers,
-                    { yPercent: 110, rotateX: -20 },
+                    { yPercent: 110, rotateX: -20, opacity: 0 },
                     {
                         yPercent: 0,
                         rotateX: 0,
-                        duration: 1.2,
-                        stagger: 0.08,
+                        opacity: 1,
+                        duration: 1.0,
+                        stagger: 0.06,
                         ease: "power3.out",
                     },
-                    "-=0.6"
+                    "-=0.3"
                 );
             }
 
@@ -51,9 +68,9 @@ export default function Hero() {
                 {
                     opacity: 1,
                     y: 0,
-                    duration: 1.0,
+                    duration: 0.8,
                 },
-                "-=0.5"
+                "-=0.4"
             );
 
             // Scroll indicator appears
@@ -68,34 +85,87 @@ export default function Hero() {
         return () => ctx.revert();
     }, []);
 
-    // Pinned Scroll Interaction
+    // Pinned Scroll Interaction + Rotating Words
     useEffect(() => {
         const ctx = gsap.context(() => {
             const solidLayers = headlineRef.current?.querySelectorAll(".solid-layer");
+            const outlineWordEls = outlineWordsRef.current.filter(Boolean) as HTMLSpanElement[];
+            const solidWordEls = solidWordsRef.current.filter(Boolean) as HTMLSpanElement[];
 
-            if (solidLayers && solidLayers.length > 0) {
-                const tl = gsap.timeline({
-                    scrollTrigger: {
-                        trigger: containerRef.current,
-                        start: "top top", // Start when hero hits top
-                        end: "+=150%", // Pin for 150% of viewport height
-                        pin: true,     // Pin the section
-                        scrub: 1,      // Smooth scrubbing
-                        // markers: true, // Debug
-                    }
+            // Set initial state: first word visible, all others hidden
+            outlineWordEls.forEach((el, i) => {
+                gsap.set(el, {
+                    opacity: i === 0 ? 1 : 0,
+                    y: i === 0 ? 0 : 40,
                 });
+            });
+            solidWordEls.forEach((el, i) => {
+                gsap.set(el, {
+                    opacity: i === 0 ? 1 : 0,
+                    y: i === 0 ? 0 : 40,
+                });
+            });
 
-                // Solid → Outline (plays once on the way down)
+            // Build the main pinned timeline
+            const totalWords = rotatingWords.length;
+            // Each word gets an equal portion of scroll.
+            const scrollPerWord = 80;
+            const totalScroll = scrollPerWord * totalWords;
+
+            const masterTl = gsap.timeline({
+                scrollTrigger: {
+                    trigger: containerRef.current,
+                    start: "top top",
+                    end: `+=${totalScroll}%`,
+                    pin: true,
+                    scrub: 1,
+                    // markers: true, // Debug
+                },
+            });
+
+            // 1) Solid → Outline wipe runs across the FULL scroll duration (simultaneous with word rotation)
+            if (solidLayers && solidLayers.length > 0) {
                 solidLayers.forEach((layer) => {
-                    tl.to(layer, {
-                        clipPath: "inset(0 100% 0 0)", // Wipe right to hide solid
-                        duration: 1,
-                        ease: "none"
-                    });
+                    masterTl.to(layer, {
+                        clipPath: "inset(0 100% 0 0)",
+                        duration: totalScroll,
+                        ease: "none",
+                    }, 0);
                 });
             }
 
-            // Fade subtext out during the pin — fromTo ensures clean reversal
+            // 2) Rotating words: animate transitions between each word (runs concurrently with wipe)
+            for (let i = 0; i < totalWords - 1; i++) {
+                const segmentStart = scrollPerWord * i + scrollPerWord * 0.65; // hold then transition
+                const transitionDuration = scrollPerWord * 0.35;
+
+                // Animate outgoing word (both layers)
+                [outlineWordEls[i], solidWordEls[i]].forEach((el) => {
+                    if (!el) return;
+                    masterTl.to(el, {
+                        opacity: 0,
+                        y: -40,
+                        duration: transitionDuration,
+                        ease: "power2.inOut",
+                    }, segmentStart);
+                });
+
+                // Animate incoming word (both layers)
+                [outlineWordEls[i + 1], solidWordEls[i + 1]].forEach((el) => {
+                    if (!el) return;
+                    masterTl.to(el, {
+                        opacity: 1,
+                        y: 0,
+                        duration: transitionDuration,
+                        ease: "power2.inOut",
+                    }, segmentStart);
+                });
+            }
+
+            // 3) Hold the last word for a moment before unpin (add empty time)
+            masterTl.to({}, { duration: scrollPerWord * 0.5 });
+
+            // Fade subtext out during the pin
             gsap.fromTo(subtextRef.current,
                 { opacity: 1, y: 0 },
                 {
@@ -131,13 +201,11 @@ export default function Hero() {
         return () => ctx.revert();
     }, []);
 
-    const words = ["WE", "BUILD", "FOCUSED", "BUSINESSES."];
+    const words = ["WE", "BUILD", "DYNAMIC", "BUSINESSES."];
 
     return (
         <section
             ref={containerRef}
-            // Removed min-h-[1XXvh] because framing is handled by pin duration
-            // Removed sticky class
             className="relative flex h-screen w-full flex-col justify-center md:justify-start md:pt-20 px-6 sm:px-12 md:px-24 lg:px-32 overflow-hidden"
             id="home"
         >
@@ -168,7 +236,23 @@ export default function Hero() {
                                         WebkitTextStroke: "1px #000000",
                                     }}
                                 >
-                                    {word}
+                                    {i === 2 ? (
+                                        <span className="rotating-word-container inline-block relative">
+                                            {rotatingWords.map((rw, ri) => (
+                                                <span
+                                                    key={ri}
+                                                    ref={(el) => setOutlineWordRef(el, ri)}
+                                                    className={`${ri === 0 ? 'relative' : 'absolute top-0 left-0'}`}
+                                                    style={{
+                                                        display: 'inline-block',
+                                                        whiteSpace: 'nowrap',
+                                                    }}
+                                                >
+                                                    {rw}
+                                                </span>
+                                            ))}
+                                        </span>
+                                    ) : word}
                                 </span>
 
                                 {/* Top Layer: Solid */}
@@ -182,7 +266,23 @@ export default function Hero() {
                                         willChange: "clip-path",
                                     }}
                                 >
-                                    {word}
+                                    {i === 2 ? (
+                                        <span className="inline-block relative">
+                                            {rotatingWords.map((rw, ri) => (
+                                                <span
+                                                    key={ri}
+                                                    ref={(el) => setSolidWordRef(el, ri)}
+                                                    className={`${ri === 0 ? 'relative' : 'absolute top-0 left-0'}`}
+                                                    style={{
+                                                        display: 'inline-block',
+                                                        whiteSpace: 'nowrap',
+                                                    }}
+                                                >
+                                                    {rw}
+                                                </span>
+                                            ))}
+                                        </span>
+                                    ) : word}
                                 </span>
                             </div>
                         </div>

@@ -155,6 +155,18 @@ export default function PortfolioItemPage({
                             >
                                 {item.tagline}
                             </p>
+
+                            {item.url && (
+                                <a
+                                    href={item.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="mt-6 inline-flex items-center gap-2 font-sans text-xs font-bold uppercase tracking-[0.2em] text-neutral-400 transition-colors hover:text-black"
+                                >
+                                    Visit Site
+                                    <span className="text-base">↗</span>
+                                </a>
+                            )}
                         </header>
                     </div>
 
@@ -162,9 +174,10 @@ export default function PortfolioItemPage({
                     <div className="flex items-center justify-center">
                         <div ref={imageRef} className="relative aspect-[4/3] w-full overflow-hidden rounded-sm bg-neutral-200" style={{ opacity: 0 }}>
                             <img
-                                src={item.image}
+                                src={item.screenshot || item.image}
                                 alt={item.name}
                                 className="h-full w-full object-cover"
+                                onError={(e) => { (e.target as HTMLImageElement).src = "/placeholder.svg"; }}
                             />
                         </div>
                     </div>
