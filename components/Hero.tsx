@@ -3,6 +3,7 @@
 import { useLayoutEffect, useRef, useEffect, useCallback } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Scene3D from "@/components/Scene3D";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -206,17 +207,21 @@ export default function Hero() {
     return (
         <section
             ref={containerRef}
-            className="relative flex h-screen w-full flex-col justify-center md:justify-start md:pt-20 px-6 sm:px-12 md:px-24 lg:px-32 overflow-hidden"
+            className="relative flex h-screen w-full flex-col justify-center md:justify-start md:pt-20 px-6 sm:px-12 md:px-24 lg:px-32 overflow-hidden z-50 pointer-events-none"
             id="home"
         >
             {/* Curtain overlay */}
             <div
                 ref={overlayRef}
-                className="absolute inset-0 bg-[#fafafa] z-20 origin-top"
+                className="absolute inset-0 bg-[#fafafa] z-10 origin-top"
             />
 
-            <div ref={contentRef} className="w-full relative z-10">
-                <div ref={headlineRef} className="flex flex-col">
+            <div className="bg-neutral-200/60 rounded-3xl p-6 sm:p-10 md:p-16 lg:p-20 z-50 relative overflow-hidden">
+                <div className="absolute inset-0 z-0">
+                    <Scene3D />
+                </div>
+
+                <div ref={headlineRef} className="flex flex-col relative z-10">
                     {words.map((word, i) => (
                         <div
                             key={word + i}
@@ -231,8 +236,8 @@ export default function Hero() {
                                     style={{
                                         fontSize:
                                             i === words.length - 1
-                                                ? "clamp(3rem, 12vw, 10rem)"
-                                                : "clamp(3.5rem, 13vw, 11rem)",
+                                                ? "clamp(2rem, 10vw, 10rem)"
+                                                : "clamp(2.5rem, 11vw, 11rem)",
                                         WebkitTextStroke: "1px #000000",
                                     }}
                                 >
@@ -261,8 +266,8 @@ export default function Hero() {
                                     style={{
                                         fontSize:
                                             i === words.length - 1
-                                                ? "clamp(3rem, 12vw, 10rem)"
-                                                : "clamp(3.5rem, 13vw, 11rem)",
+                                                ? "clamp(2rem, 10vw, 10rem)"
+                                                : "clamp(2.5rem, 11vw, 11rem)",
                                         willChange: "clip-path",
                                     }}
                                 >
@@ -291,11 +296,11 @@ export default function Hero() {
 
                 <p
                     ref={subtextRef}
-                    className="mt-10 font-sans text-[10px] font-bold tracking-[0.3em] text-neutral-400 sm:text-xs uppercase"
+                    className="mt-10 font-sans text-[10px] font-bold tracking-[0.3em] text-neutral-400 sm:text-xs uppercase relative z-10"
                 >
                     Operator-led · Long-term · Deliberate
                 </p>
             </div>
-        </section>
+        </section >
     );
 }

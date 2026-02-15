@@ -421,7 +421,7 @@ export default function Scene3D() {
 
     return (
         <>
-            <div className="fixed inset-0 z-[-1] pointer-events-none">
+            <div className="absolute inset-0 z-20 pointer-events-none">
                 <Canvas
                     camera={{ position: [0, 0, 5], fov: 60 }}
                     gl={{ alpha: true, antialias: true }}
@@ -441,7 +441,7 @@ export default function Scene3D() {
             </div>
 
             {showClickEffect && (
-                <div className="fixed inset-0 z-50 pointer-events-none flex items-center justify-center">
+                <div className="absolute inset-0 z-50 pointer-events-none flex items-center justify-center">
                     <div className="text-6xl md:text-8xl font-bold text-black animate-ping-slow">
                         {clickEffectText}
                     </div>
