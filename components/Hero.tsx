@@ -197,6 +197,30 @@ export default function Hero() {
                 }
             );
 
+            // Typography morphing - weight and tracking changes on scroll
+            const wordWrappers = headlineRef.current?.querySelectorAll(".word-wrapper span");
+            if (wordWrappers) {
+                wordWrappers.forEach((word) => {
+                    // Start lighter and wider
+                    gsap.set(word, {
+                        fontWeight: 300,
+                        letterSpacing: "0.05em",
+                    });
+
+                    // Morph to bold and tighter as section locks
+                    gsap.to(word, {
+                        fontWeight: 800,
+                        letterSpacing: "-0.02em",
+                        scrollTrigger: {
+                            trigger: containerRef.current,
+                            start: "top top",
+                            end: "+=60%",
+                            scrub: 1,
+                        },
+                    });
+                });
+            }
+
         }, containerRef);
 
         return () => ctx.revert();
@@ -216,8 +240,8 @@ export default function Hero() {
                 className="absolute inset-0 bg-[#fafafa] z-10 origin-top"
             />
 
-            <div className="bg-neutral-200/60 rounded-3xl p-6 sm:p-10 md:p-16 lg:p-20 z-50 relative overflow-hidden">
-                <div className="absolute inset-0 z-0">
+            <div className="bg-neutral-200/60 rounded-3xl p-6 sm:p-10 md:p-16 lg:p-20 z-50 relative overflow-hidden min-h-[75vh] sm:min-h-0 flex flex-col justify-center sm:block">
+                <div className="absolute inset-0 z-10">
                     <Scene3D />
                 </div>
 

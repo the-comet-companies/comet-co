@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { operatingPrinciples } from "@/lib/data";
+import TextReveal from "./TextReveal";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -69,7 +70,9 @@ export default function OperatingPrinciples() {
                 }}
             >
                 <div ref={headerRef}>
-                    <h2
+                    <TextReveal
+                        text="Operating Principles"
+                        as="h2"
                         style={{
                             fontFamily: "var(--font-sans)",
                             fontSize: "0.625rem",
@@ -79,9 +82,7 @@ export default function OperatingPrinciples() {
                             color: "#9ca3af",
                             marginBottom: "3rem",
                         }}
-                    >
-                        Operating Principles
-                    </h2>
+                    />
 
                     <div
                         style={{

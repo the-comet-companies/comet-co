@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { aboutContent, teamMembers } from "@/lib/data";
+import TextReveal from "./TextReveal";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -12,6 +13,7 @@ export default function About() {
     const contentRef = useRef<HTMLDivElement>(null);
     const statsRef = useRef<HTMLDivElement>(null);
     const teamRef = useRef<HTMLDivElement>(null);
+    const headingRef = useRef<HTMLHeadingElement>(null);
 
     useEffect(() => {
         const ctx = gsap.context(() => {
@@ -70,6 +72,24 @@ export default function About() {
                     }
                 );
             }
+
+            // Typography morphing for "Who We Are" heading
+            if (headingRef.current) {
+                gsap.fromTo(
+                    headingRef.current,
+                    { fontWeight: 300, letterSpacing: "0.05em" },
+                    {
+                        fontWeight: 800,
+                        letterSpacing: "-0.02em",
+                        scrollTrigger: {
+                            trigger: headingRef.current,
+                            start: "top 80%",
+                            end: "top 40%",
+                            scrub: 1,
+                        },
+                    }
+                );
+            }
         }, containerRef);
 
         return () => ctx.revert();
@@ -86,7 +106,9 @@ export default function About() {
                     opacity: 0,
                 }}
             >
-                <h2
+                <TextReveal
+                    text="About Us"
+                    as="h2"
                     style={{
                         fontFamily: "var(--font-sans)",
                         fontSize: "0.625rem",
@@ -96,19 +118,18 @@ export default function About() {
                         color: "#9ca3af",
                         marginBottom: "3rem",
                     }}
-                >
-                    About Us
-                </h2>
+                />
 
                 <div style={{ display: "flex", flexDirection: "column", gap: "3rem" }}>
                     <div>
                         <h3
+                            ref={headingRef}
                             style={{
                                 fontFamily: "var(--font-sans)",
                                 fontSize: "clamp(1.75rem, 4vw, 3rem)",
-                                fontWeight: 800,
+                                fontWeight: 300,
                                 textTransform: "uppercase",
-                                letterSpacing: "-0.02em",
+                                letterSpacing: "0.05em",
                                 lineHeight: 1.1,
                                 color: "#111827",
                                 marginBottom: "1.5rem",

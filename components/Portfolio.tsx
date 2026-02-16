@@ -5,6 +5,7 @@ import Link from "next/link";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { portfolioItems } from "@/lib/data";
+import TextReveal from "./TextReveal";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -48,7 +49,9 @@ export default function Portfolio() {
                     margin: "0 auto",
                 }}
             >
-                <h2
+                <TextReveal
+                    text="Our Portfolio"
+                    as="h2"
                     style={{
                         fontFamily: "var(--font-sans)",
                         fontSize: "0.625rem",
@@ -57,9 +60,7 @@ export default function Portfolio() {
                         letterSpacing: "0.25em",
                         color: "#9ca3af",
                     }}
-                >
-                    Our Portfolio
-                </h2>
+                />
             </div>
 
             {/* Grid — 2 columns for 6 items (3 rows) */}

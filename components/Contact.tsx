@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, FormEvent } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import TextReveal from "./TextReveal";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -126,8 +127,9 @@ export default function Contact() {
                 {/* ── Left Column — Info ── */}
                 <div ref={leftColRef} className="flex flex-col gap-12">
                     <div className="max-w-md">
-                        <h2
-                            data-reveal
+                        <TextReveal
+                            text="Get in Touch"
+                            as="h2"
                             style={{
                                 fontFamily: "var(--font-sans)",
                                 fontSize: "0.625rem",
@@ -136,11 +138,8 @@ export default function Contact() {
                                 letterSpacing: "0.25em",
                                 color: "#9ca3af",
                                 marginBottom: "1.5rem",
-                                opacity: 0,
                             }}
-                        >
-                            Get in Touch
-                        </h2>
+                        />
 
                         <p
                             data-reveal

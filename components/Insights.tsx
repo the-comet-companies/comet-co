@@ -5,6 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowUpRight } from "lucide-react";
 import { insights } from "@/lib/data";
+import TextReveal from "./TextReveal";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -69,8 +70,10 @@ export default function Insights() {
                     padding: "0 2rem",
                 }}
             >
-                <div ref={headerRef} style={{ opacity: 0 }}>
-                    <h2
+                <div ref={headerRef} style={{ opacity: 1 }}>
+                    <TextReveal
+                        text="Insights"
+                        as="h2"
                         style={{
                             fontFamily: "var(--font-sans)",
                             fontSize: "0.625rem",
@@ -80,9 +83,7 @@ export default function Insights() {
                             color: "#9ca3af",
                             marginBottom: "3rem",
                         }}
-                    >
-                        Insights
-                    </h2>
+                    />
 
                     <div ref={listRef}>
                         {insights.map((insight, index) => (
