@@ -6,6 +6,9 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Hero from "@/components/Hero";
 import Portfolio from "@/components/Portfolio";
 import Philosophy3D from "@/components/Philosophy3D";
+import OperatingPrinciples from "@/components/OperatingPrinciples";
+import About from "@/components/About";
+import Insights from "@/components/Insights";
 import Contact from "@/components/Contact";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -63,6 +66,9 @@ export default function Home() {
       <Hero />
       <Portfolio />
       <Philosophy3D />
+      <OperatingPrinciples />
+      <About />
+      <Insights />
       <Contact />
     </main>
   );

@@ -294,6 +294,38 @@
     font-variant-numeric: tabular-nums;
   }
 
+  /* ===== Portfolio Card Hover ===== */
+  .portfolio-card:hover .portfolio-card-bg {
+    opacity: 1 !important;
+    transform: scale(1.05);
+  }
+
+  .portfolio-card:hover .portfolio-card-overlay {
+    opacity: 1 !important;
+  }
+
+  .portfolio-card:hover .portfolio-card-name {
+    color: #fff !important;
+  }
+
+  .portfolio-card:hover .portfolio-card-tag {
+    color: #fff !important;
+  }
+
+  .portfolio-card:hover .portfolio-card-idx {
+    color: rgba(255, 255, 255, 0.6) !important;
+  }
+
+  .portfolio-card:hover .portfolio-card-arrow {
+    opacity: 1 !important;
+    transform: translateX(0) !important;
+  }
+
+  .portfolio-card:hover .portfolio-card-url {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+  }
+
   /* ===== Smooth mask reveal for sections ===== */
   .mask-reveal {
     clip-path: inset(0 0 100% 0);
@@ -345,6 +377,14 @@
 
   .philosophy-grid {
     grid-template-columns: 1fr !important;
+  }
+
+  .portfolio-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .portfolio-card {
+    min-height: 280px !important;
   }
 }
 

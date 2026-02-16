@@ -1,3 +1,37 @@
+export interface AboutContent {
+    story: string;
+    mission: string;
+    operatingModel: string;
+    stats: { label: string; value: string }[];
+}
+
+export interface OperatingPrinciple {
+    number: string;
+    title: string;
+    description: string;
+}
+
+export interface TeamMember {
+    name: string;
+    role: string;
+}
+
+export interface Insight {
+    title: string;
+    date: string;
+}
+
+export const aboutContent: AboutContent = {
+    story: "We are an operator-led holding company that builds and operates focused businesses for the long term. We don't chase trends or buzzwords—we build what's real.",
+    mission: "To create durable, valuable businesses that compound over time by combining operational excellence with clear strategic thinking.",
+    operatingModel: "We acquire, build, and operate businesses end-to-end. Every company in our portfolio receives hands-on operational support, strategic direction, and the resources needed to scale sustainably.",
+    stats: [
+        { label: "Years Operating", value: "10+" },
+        { label: "Portfolio Companies", value: "6" },
+        { label: "Industries", value: "4" },
+    ],
+};
+
 export interface PortfolioItem {
     slug: string;
     name: string;
@@ -94,5 +128,58 @@ export const portfolioItems: PortfolioItem[] = [
         image: "/portfolio/bluestarcp.png",
         screenshot: "/portfolio/bluestarcp.png",
         url: "https://bluestarcp.com",
+    },
+];
+
+export const operatingPrinciples: OperatingPrinciple[] = [
+    {
+        number: "01",
+        title: "We don't chase trends",
+        description: "We build what's real. Not what's trending.",
+    },
+    {
+        number: "02",
+        title: "We hire operators",
+        description: "Not consultants. People who build and ship.",
+    },
+    {
+        number: "03",
+        title: "We optimize for durability",
+        description: "Not speed. Businesses that last decades.",
+    },
+    {
+        number: "04",
+        title: "We remove noise",
+        description: "To find signal. Clarity through elimination.",
+    },
+];
+
+export const teamMembers: TeamMember[] = [
+    {
+        name: "Alex Chen",
+        role: "Managing Partner",
+    },
+    {
+        name: "Sarah Martinez",
+        role: "Operating Partner",
+    },
+    {
+        name: "Michael Park",
+        role: "Operating Partner",
+    },
+];
+
+export const insights: Insight[] = [
+    {
+        title: "The Case Against Growth at All Costs",
+        date: "2025",
+    },
+    {
+        title: "Building for the Next Decade, Not the Next Round",
+        date: "2025",
+    },
+    {
+        title: "Why We Don't Do Vanity Metrics",
+        date: "2024",
     },
 ];

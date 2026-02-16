@@ -11,6 +11,7 @@ const NAV_ITEMS = [
     { label: "Home", target: "#home" },
     { label: "Portfolio", target: "#portfolio" },
     { label: "Philosophy", target: "#philosophy" },
+    { label: "About", target: "#about" },
     { label: "Contact", target: "#contact" },
 ];
 
