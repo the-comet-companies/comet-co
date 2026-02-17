@@ -3,11 +3,12 @@
 import { useLayoutEffect, useRef, useEffect, useCallback } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { heroContent } from "@/lib/data";
 import Scene3D from "@/components/Scene3D";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const rotatingWords = ["AUTOMATED", "AI POWERED", "FOCUSED", "SCALABLE", "MINDFUL", "SUSTAINABLE"];
+const rotatingWords = heroContent.rotatingWords;
 
 export default function Hero() {
     const containerRef = useRef<HTMLElement>(null);
@@ -226,12 +227,12 @@ export default function Hero() {
         return () => ctx.revert();
     }, []);
 
-    const words = ["WE", "BUILD", "DYNAMIC", "BUSINESSES."];
+    const words = heroContent.headline;
 
     return (
         <section
             ref={containerRef}
-            className="relative flex h-screen w-full flex-col justify-center md:justify-start md:pt-20 px-6 sm:px-12 md:px-24 lg:px-32 overflow-hidden z-50 pointer-events-none"
+            className="relative flex h-screen w-full flex-col justify-center md:justify-start md:pt-20 px-4 sm:px-6 md:px-8 overflow-hidden z-50 pointer-events-none"
             id="home"
         >
             {/* Curtain overlay */}
@@ -240,7 +241,7 @@ export default function Hero() {
                 className="absolute inset-0 bg-[#fafafa] z-10 origin-top"
             />
 
-            <div className="bg-neutral-200/60 rounded-3xl p-6 sm:p-10 md:p-16 lg:p-20 z-50 relative overflow-hidden min-h-[75vh] sm:min-h-0 flex flex-col justify-center sm:block">
+            <div className="bg-neutral-200/60 rounded-3xl p-4 sm:p-10 md:p-16 lg:p-20 z-50 relative overflow-hidden min-h-[75vh] sm:min-h-0 flex flex-col justify-center sm:block">
                 <div className="absolute inset-0 z-10">
                     <Scene3D />
                 </div>
@@ -259,7 +260,7 @@ export default function Hero() {
                                     className="inline-block font-sans font-bold text-transparent absolute top-0 left-0 select-none"
                                     style={{
                                         fontSize:
-                                            i === words.length - 1
+                                            i === words.length - 1 || i === 2
                                                 ? "clamp(2rem, 10vw, 10rem)"
                                                 : "clamp(2.5rem, 11vw, 11rem)",
                                         WebkitTextStroke: "1px #000000",
@@ -289,7 +290,7 @@ export default function Hero() {
                                     className="solid-layer inline-block font-sans font-bold text-[#000000] relative z-10"
                                     style={{
                                         fontSize:
-                                            i === words.length - 1
+                                            i === words.length - 1 || i === 2
                                                 ? "clamp(2rem, 10vw, 10rem)"
                                                 : "clamp(2.5rem, 11vw, 11rem)",
                                         willChange: "clip-path",
@@ -322,7 +323,7 @@ export default function Hero() {
                     ref={subtextRef}
                     className="mt-10 font-sans text-[10px] font-bold tracking-[0.3em] text-neutral-400 sm:text-xs uppercase relative z-10"
                 >
-                    Operator-led · Long-term · Deliberate
+                    {heroContent.subtext}
                 </p>
             </div>
         </section >

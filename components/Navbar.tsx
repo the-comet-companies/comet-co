@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import gsap from "gsap";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -19,10 +20,14 @@ export default function Navbar() {
     const navRef = useRef<HTMLElement>(null);
     const indicatorRef = useRef<HTMLDivElement>(null);
     const linksRef = useRef<(HTMLButtonElement | null)[]>([]);
-    const [activeIndex, setActiveIndex] = useState(0);
+    const [activeIndex, setActiveIndex] = useState(-1);
     const [mobileOpen, setMobileOpen] = useState(false);
     const mobileMenuRef = useRef<HTMLDivElement>(null);
     const mobileLinkRefs = useRef<(HTMLButtonElement | null)[]>([]);
+
+    const pathname = usePathname();
+    const router = useRouter();
+    const searchParams = useSearchParams();
 
     // Entrance animation
     useEffect(() => {
@@ -36,6 +41,17 @@ export default function Navbar() {
 
     // Active section tracking — uses scroll events for reliability with pinned sections
     useEffect(() => {
+        // Handle non-home pages
+        if (pathname !== "/") {
+            if (pathname.startsWith("/portfolio")) {
+                const idx = NAV_ITEMS.findIndex(item => item.label === "Portfolio");
+                setActiveIndex(idx);
+            } else {
+                setActiveIndex(-1);
+            }
+            return;
+        }
+
         const updateActive = () => {
             const viewportMid = window.innerHeight * 0.4;
             let best = 0;
@@ -66,7 +82,7 @@ export default function Navbar() {
             window.removeEventListener("scroll", updateActive);
             ScrollTrigger.removeEventListener("refresh", updateActive);
         };
-    }, []);
+    }, [pathname]);
 
     // Move active indicator
     useEffect(() => {
@@ -74,7 +90,16 @@ export default function Navbar() {
         const indicator = indicatorRef.current;
         const container = navRef.current?.querySelector("[data-links]");
 
-        if (!activeLink || !indicator || !container) return;
+        if (!indicator || !container) return;
+
+        if (!activeLink) {
+            gsap.to(indicator, {
+                opacity: 0,
+                duration: 0.3,
+                ease: "power2.out",
+            });
+            return;
+        }
 
         const linkRect = activeLink.getBoundingClientRect();
         const containerRect = container.getBoundingClientRect();
@@ -82,6 +107,7 @@ export default function Navbar() {
         gsap.to(indicator, {
             left: linkRect.left - containerRect.left,
             width: linkRect.width,
+            opacity: 1,
             duration: 0.4,
             ease: "power3.out",
         });
@@ -90,14 +116,19 @@ export default function Navbar() {
     // Smooth scroll handler
     const handleNavClick = (target: string) => {
         setMobileOpen(false);
-        const section = document.querySelector(target);
-        if (!section) return;
 
-        gsap.to(window, {
-            scrollTo: { y: section, offsetY: 0 },
-            duration: 1.2,
-            ease: "power3.inOut",
-        });
+        if (pathname === "/") {
+            const section = document.querySelector(target);
+            if (!section) return;
+
+            gsap.to(window, {
+                scrollTo: { y: section, offsetY: 0 },
+                duration: 1.2,
+                ease: "power3.inOut",
+            });
+        } else {
+            router.push(`/?target=${target.replace("#", "")}`);
+        }
     };
 
     // Mobile menu animation
@@ -137,6 +168,28 @@ export default function Navbar() {
         window.addEventListener("keydown", handleKeyDown);
         return () => window.removeEventListener("keydown", handleKeyDown);
     }, [mobileOpen]);
+
+    // Check for "target" query param on mount (for cross-page navigation)
+    useEffect(() => {
+        if (pathname === "/" && searchParams) {
+            const targetId = searchParams.get("target");
+            if (targetId) {
+                const section = document.querySelector("#" + targetId);
+                if (section) {
+                    // Small delay to ensure layout is ready
+                    setTimeout(() => {
+                        gsap.to(window, {
+                            scrollTo: { y: section, offsetY: 0 },
+                            duration: 1.2,
+                            ease: "power3.inOut",
+                        });
+                        // Optional: Clear the query param
+                        router.replace("/", { scroll: false });
+                    }, 500);
+                }
+            }
+        }
+    }, [pathname, searchParams, router]);
 
     return (
         <>

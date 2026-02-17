@@ -6,40 +6,14 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const philosophyData = [
-    {
-        statement: "We build.",
-        rotatingWords: ["INFRASTRUCTURE", "RELATIONSHIPS", "SYSTEMS", "VALUE"],
-        outcome: "Foundations that last decades, not quarters",
-    },
-    {
-        statement: "We operate.",
-        rotatingWords: ["WITH INTENT", "AT SCALE", "FOR IMPACT", "WITH PRECISION"],
-        outcome: "Efficient execution across all business verticals",
-    },
-    {
-        statement: "We focus.",
-        rotatingWords: ["ON WHAT MATTERS", "ON GROWTH", "ON SUSTAINABILITY", "ON OUTCOMES"],
-        outcome: "Laser-sharp prioritization drives results",
-    },
-    {
-        statement: "We remove noise.",
-        rotatingWords: ["CLUTTER", "FRICTION", "UNCERTAINTY", "COMPLEXITY"],
-        outcome: "Clarity emerges when distraction disappears",
-    },
-    {
-        statement: "We compound.",
-        rotatingWords: ["EFFORTS", "KNOWLEDGE", "NETWORKS", "CAPITAL"],
-        outcome: "Small consistent wins become transformative outcomes",
-    },
-];
+import { philosophyContent as philosophyData } from "@/lib/data";
 
 export default function Philosophy() {
     const sectionRef = useRef<HTMLElement>(null);
     const headingRef = useRef<HTMLHeadingElement>(null);
     const dividerRef = useRef<HTMLDivElement>(null);
     const itemsRef = useRef<(HTMLDivElement | null)[]>([]);
-    
+
     const outlineWordsRefs = useRef<(HTMLSpanElement | null)[][]>([]);
     const solidWordsRefs = useRef<(HTMLSpanElement | null)[][]>([]);
 
@@ -99,20 +73,20 @@ export default function Philosophy() {
 
             // 1. Heading slide in
             tl.to(headingRef.current, { opacity: 1, x: 0, duration: 0.5 });
-            
+
             // 2. Divider draws
             tl.to(dividerRef.current, { scaleX: 1, duration: 0.8, ease: "power2.inOut" }, ">-0.3");
 
             // 3. Items animate in sequence with rotating words
             const itemsPerScroll = 100 / philosophyData.length;
-            
+
             philosophyData.forEach((_, itemIndex) => {
                 const itemStart = itemsPerScroll * itemIndex;
-                
+
                 // Animate item in
-                tl.to(itemsRef.current[itemIndex], { 
-                    opacity: 1, 
-                    y: 0, 
+                tl.to(itemsRef.current[itemIndex], {
+                    opacity: 1,
+                    y: 0,
                     duration: itemsPerScroll * 0.6,
                     ease: "power2.out"
                 }, `>+${itemStart * 0.1}`);
@@ -125,7 +99,7 @@ export default function Philosophy() {
                 if (outlineWords && solidWords) {
                     for (let i = 0; i < rotatingWords.length - 1; i++) {
                         const wordStart = itemStart + (itemsPerScroll * 0.3) + (i * itemsPerScroll * 0.15);
-                        
+
                         // Animate out current word
                         tl.to([outlineWords[i], solidWords[i]], {
                             opacity: 0,
@@ -174,7 +148,7 @@ export default function Philosophy() {
                                     <span className="font-sans font-bold text-5xl sm:text-6xl md:text-7xl lg:text-8xl tracking-tight text-neutral-900">
                                         {item.statement}
                                     </span>
-                                    
+
                                     {/* Rotating Keywords */}
                                     <div className="rotating-keywords-container relative inline-block overflow-hidden h-[1.2em]">
                                         {/* Bottom Layer - Outline */}
@@ -193,7 +167,7 @@ export default function Philosophy() {
                                                 </span>
                                             ))}
                                         </span>
-                                        
+
                                         {/* Top Layer - Solid */}
                                         <span className="rotating-solid-layer absolute top-0 left-0 inline-block clip-wipe">
                                             {item.rotatingWords.map((rw, ri) => (

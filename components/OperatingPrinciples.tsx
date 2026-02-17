@@ -85,21 +85,13 @@ export default function OperatingPrinciples() {
                     />
 
                     <div
-                        style={{
-                            display: "grid",
-                            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-                            gap: "1px",
-                            background: "#e5e7eb",
-                        }}
+                        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-px bg-neutral-200"
                     >
                         {operatingPrinciples.map((principle) => (
                             <div
                                 key={principle.number}
                                 data-principle
-                                style={{
-                                    background: "#fafafa",
-                                    padding: "3rem 2rem",
-                                }}
+                                className="bg-neutral-50 py-12 px-8"
                             >
                                 <h3
                                     style={{

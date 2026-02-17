@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, FormEvent } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import TextReveal from "./TextReveal";
+import { contactContent } from "@/lib/data";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -28,6 +29,9 @@ export default function Contact() {
         subject: "",
         message: "",
     });
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isSuccess, setIsSuccess] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -35,11 +39,40 @@ export default function Contact() {
         setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     };
 
-    const handleSubmit = (e: FormEvent) => {
+    const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
-        const subjectLine = form.subject || "General Inquiry";
-        const body = `Name: ${form.name}%0D%0A%0D%0A${form.message}`;
-        window.location.href = `mailto:hello@thecometcompanies.com?subject=${encodeURIComponent(subjectLine)}&body=${body}`;
+        setIsSubmitting(true);
+        setError(null);
+        setIsSuccess(false);
+
+        try {
+            const response = await fetch(
+                "https://n8n-dtla-c914de1950b9.herokuapp.com/webhook/2f5b9741-ac4e-4d25-8417-f8bd17d0dcd9",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(form),
+                }
+            );
+
+            if (response.ok) {
+                setIsSuccess(true);
+                setForm({
+                    name: "",
+                    email: "",
+                    subject: "",
+                    message: "",
+                });
+            } else {
+                setError("Something went wrong. Please try again later.");
+            }
+        } catch (err) {
+            setError("Network error. Please check your connection and try again.");
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     useEffect(() => {
@@ -128,7 +161,7 @@ export default function Contact() {
                 <div ref={leftColRef} className="flex flex-col gap-12">
                     <div className="max-w-md">
                         <TextReveal
-                            text="Get in Touch"
+                            text={contactContent.heading}
                             as="h2"
                             style={{
                                 fontFamily: "var(--font-sans)",
@@ -153,9 +186,12 @@ export default function Contact() {
                                 opacity: 0,
                             }}
                         >
-                            Let&apos;s build something
-                            <br />
-                            together.
+                            {contactContent.description.split('\n').map((line, i) => (
+                                <span key={i}>
+                                    {line}
+                                    {i === 0 && <br />}
+                                </span>
+                            ))}
                         </p>
                     </div>
 
@@ -171,14 +207,14 @@ export default function Contact() {
                                 marginBottom: "1rem",
                             }}
                         >
-                            Direct Inquiries
+                            {contactContent.emailDescription}
                         </h4>
                         <a
-                            href="mailto:hello@thecometcompanies.com"
+                            href={`mailto:${contactContent.email}`}
                             className="email-link relative inline-block text-xl sm:text-2xl font-bold text-neutral-900 tracking-tight"
                             style={{ textDecoration: "none" }}
                         >
-                            hello@thecometcompanies.com
+                            {contactContent.email}
                         </a>
 
                         <p
@@ -191,7 +227,7 @@ export default function Contact() {
                                 letterSpacing: "0.05em",
                             }}
                         >
-                            Serious inquiries only.
+                            {contactContent.note}
                         </p>
                     </div>
                 </div>
@@ -288,10 +324,26 @@ export default function Contact() {
 
                         {/* Submit */}
                         <div data-reveal style={{ opacity: 0 }}>
-                            <button type="submit" className="contact-submit w-full sm:w-auto">
-                                Send Message
-                                <span style={{ marginLeft: "0.75rem", transition: "transform 0.3s ease" }}>→</span>
+                            <button
+                                type="submit"
+                                disabled={isSubmitting}
+                                className="contact-submit w-full sm:w-auto disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                                {isSubmitting ? "Sending..." : "Send Message"}
+                                {!isSubmitting && (
+                                    <span style={{ marginLeft: "0.75rem", transition: "transform 0.3s ease" }}>→</span>
+                                )}
                             </button>
+                            {isSuccess && (
+                                <p className="mt-4 text-green-600 text-sm font-medium">
+                                    Message sent successfully! We&apos;ll be in touch soon.
+                                </p>
+                            )}
+                            {error && (
+                                <p className="mt-4 text-red-600 text-sm font-medium">
+                                    {error}
+                                </p>
+                            )}
                         </div>
                     </form>
                 </div>

@@ -1,3 +1,70 @@
+export interface HeroContent {
+    headline: string[];
+    rotatingWords: string[];
+    subtext: string;
+}
+
+export const heroContent: HeroContent = {
+    headline: ["WE", "BUILD", "DYNAMIC", "BUSINESSES."],
+    rotatingWords: ["AUTOMATED", "AI POWERED", "FOCUSED", "SCALABLE", "MINDFUL", "SUSTAINABLE"],
+    subtext: "Operator-led · Long-term · Deliberate",
+};
+
+export interface PhilosophyItem {
+    statement: string;
+    rotatingWords: string[];
+    outcome: string;
+    description: string;
+    color: string;
+}
+
+export const philosophyContent: PhilosophyItem[] = [
+    {
+        statement: "We build.",
+        rotatingWords: ["INFRASTRUCTURE", "RELATIONSHIPS", "SYSTEMS", "VALUE"],
+        outcome: "Foundations that last decades, not quarters",
+        description: "We build the foundations that outlast quarters. Not temporary solutions—permanent pillars.",
+        color: "#3b82f6",
+    },
+    {
+        statement: "We operate.",
+        rotatingWords: ["WITH INTENT", "AT SCALE", "FOR IMPACT", "WITH PRECISION"],
+        outcome: "Efficient execution across all business verticals",
+        description: "Operations that scale without friction. Systems that grow stronger under pressure.",
+        color: "#8b5cf6",
+    },
+    {
+        statement: "We focus.",
+        rotatingWords: ["ON WHAT MATTERS", "ON GROWTH", "ON SUSTAINABILITY", "ON OUTCOMES"],
+        outcome: "Laser-sharp prioritization drives results",
+        description: "Laser-sharp prioritization drives results. We remove everything that doesn't matter.",
+        color: "#ec4899",
+    },
+    {
+        statement: "We compound.",
+        rotatingWords: ["EFFORTS", "KNOWLEDGE", "NETWORKS", "CAPITAL"],
+        outcome: "Small consistent wins become transformative outcomes",
+        description: "Small wins accumulate into transformation. We play infinite games with finite urgency.",
+        color: "#f59e0b",
+    },
+];
+
+export interface ContactContent {
+    heading: string;
+    description: string;
+    emailDescription: string;
+    email: string;
+    note: string;
+}
+
+export const contactContent: ContactContent = {
+    heading: "Get in Touch",
+    description: "Let's build something\ntogether.",
+    emailDescription: "Direct Inquiries",
+    email: "hello@thecometcompanies.com",
+    note: "Serious inquiries only.",
+};
+
 export interface AboutContent {
     story: string;
     mission: string;
@@ -156,16 +223,16 @@ export const operatingPrinciples: OperatingPrinciple[] = [
 
 export const teamMembers: TeamMember[] = [
     {
-        name: "Alex Chen",
-        role: "Managing Partner",
+        name: "Michael Monfared",
+        role: "Founder | CEO",
     },
     {
-        name: "Sarah Martinez",
-        role: "Operating Partner",
+        name: "Diego Aldana",
+        role: "Website Manager",
     },
     {
-        name: "Michael Park",
-        role: "Operating Partner",
+        name: "Trisha Nicole",
+        role: "VA SEO",
     },
 ];
 
