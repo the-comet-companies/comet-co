@@ -12,14 +12,14 @@ import {
 import { useEffect, useState } from "react";
 
 const SECTIONS = [
-    { id: "hero", label: "Hero Section" },
+    { id: "hero", label: "Hero" },
     { id: "portfolio", label: "Portfolio" },
     { id: "philosophy", label: "Philosophy" },
     { id: "principles", label: "Operating Principles" },
-    { id: "about", label: "About Section" },
+    { id: "about", label: "About" },
     { id: "leadership", label: "Leadership" },
     { id: "insights", label: "Insights" },
-    { id: "contact", label: "Contact Section" },
+    { id: "contact", label: "Contact" },
 ];
 
 export default function ChangelogPage() {
@@ -71,7 +71,7 @@ export default function ChangelogPage() {
                         Use this as a reference when requesting text changes.
                     </p>
 
-                    <Section title="Hero Section" id="hero">
+                    <Section title="Hero" id="hero">
                         <ContentItem label="Headline" value={heroContent.headline.join(" ")} />
                         <ContentItem label="Rotating Words" value={heroContent.rotatingWords.join(", ")} />
                         <ContentItem label="Subtext" value={heroContent.subtext} />
@@ -90,7 +90,7 @@ export default function ChangelogPage() {
                         ))}
                     </Section>
 
-                    <Section title="Philosophy Section" id="philosophy">
+                    <Section title="Philosophy" id="philosophy">
                         {philosophyContent.map((item, i) => (
                             <div key={i} className="mb-6 p-4 bg-neutral-50 rounded-lg">
                                 <ContentItem label={`Statement ${i + 1}`} value={item.statement} />
@@ -112,7 +112,7 @@ export default function ChangelogPage() {
                         ))}
                     </Section>
 
-                    <Section title="About Section" id="about">
+                    <Section title="About" id="about">
                         <ContentItem label="Mission" value={aboutContent.mission} />
                         <ContentItem label="Story" value={aboutContent.story} />
                         <ContentItem label="Operating Model" value={aboutContent.operatingModel} />
@@ -149,7 +149,7 @@ export default function ChangelogPage() {
                         ))}
                     </Section>
 
-                    <Section title="Contact Section" id="contact">
+                    <Section title="Contact" id="contact">
                         <ContentItem label="Heading" value={contactContent.heading} />
                         <ContentItem label="Description" value={contactContent.description} />
                         <ContentItem label="Email Title" value={contactContent.emailDescription} />

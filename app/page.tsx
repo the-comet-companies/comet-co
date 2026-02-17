@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import Preloader from "@/components/Preloader";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Hero from "@/components/Hero";
@@ -15,6 +16,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function Home() {
   const progressRef = useRef<HTMLDivElement>(null);
+  const [heroStarted, setHeroStarted] = useState(false);
 
   useEffect(() => {
     // Scroll progress bar
@@ -53,6 +55,8 @@ export default function Home() {
 
   return (
     <main>
+      <Preloader onFinish={() => setHeroStarted(true)} />
+
       {/* Scroll progress bar */}
       <div
         ref={progressRef}
@@ -63,7 +67,7 @@ export default function Home() {
       {/* Subtle grain texture overlay */}
       <div className="grain-overlay" />
 
-      <Hero />
+      <Hero startAnimation={heroStarted} />
       <Portfolio />
       <Philosophy3D />
       <OperatingPrinciples />

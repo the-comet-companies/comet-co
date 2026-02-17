@@ -5,98 +5,9 @@ export interface HeroContent {
 }
 
 export const heroContent: HeroContent = {
-    headline: ["WE", "BUILD", "DYNAMIC", "BUSINESSES."],
+    headline: ["WE", "BUILD", "{-----}", "BUSINESSES."],
     rotatingWords: ["AUTOMATED", "AI POWERED", "FOCUSED", "SCALABLE", "MINDFUL", "SUSTAINABLE"],
     subtext: "Operator-led · Long-term · Deliberate",
-};
-
-export interface PhilosophyItem {
-    statement: string;
-    rotatingWords: string[];
-    outcome: string;
-    description: string;
-    color: string;
-}
-
-export const philosophyContent: PhilosophyItem[] = [
-    {
-        statement: "We build.",
-        rotatingWords: ["INFRASTRUCTURE", "RELATIONSHIPS", "SYSTEMS", "VALUE"],
-        outcome: "Foundations that last decades, not quarters",
-        description: "We build the foundations that outlast quarters. Not temporary solutions—permanent pillars.",
-        color: "#3b82f6",
-    },
-    {
-        statement: "We operate.",
-        rotatingWords: ["WITH INTENT", "AT SCALE", "FOR IMPACT", "WITH PRECISION"],
-        outcome: "Efficient execution across all business verticals",
-        description: "Operations that scale without friction. Systems that grow stronger under pressure.",
-        color: "#8b5cf6",
-    },
-    {
-        statement: "We focus.",
-        rotatingWords: ["ON WHAT MATTERS", "ON GROWTH", "ON SUSTAINABILITY", "ON OUTCOMES"],
-        outcome: "Laser-sharp prioritization drives results",
-        description: "Laser-sharp prioritization drives results. We remove everything that doesn't matter.",
-        color: "#ec4899",
-    },
-    {
-        statement: "We compound.",
-        rotatingWords: ["EFFORTS", "KNOWLEDGE", "NETWORKS", "CAPITAL"],
-        outcome: "Small consistent wins become transformative outcomes",
-        description: "Small wins accumulate into transformation. We play infinite games with finite urgency.",
-        color: "#f59e0b",
-    },
-];
-
-export interface ContactContent {
-    heading: string;
-    description: string;
-    emailDescription: string;
-    email: string;
-    note: string;
-}
-
-export const contactContent: ContactContent = {
-    heading: "Get in Touch",
-    description: "Let's build something\ntogether.",
-    emailDescription: "Direct Inquiries",
-    email: "hello@thecometcompanies.com",
-    note: "Serious inquiries only.",
-};
-
-export interface AboutContent {
-    story: string;
-    mission: string;
-    operatingModel: string;
-    stats: { label: string; value: string }[];
-}
-
-export interface OperatingPrinciple {
-    number: string;
-    title: string;
-    description: string;
-}
-
-export interface TeamMember {
-    name: string;
-    role: string;
-}
-
-export interface Insight {
-    title: string;
-    date: string;
-}
-
-export const aboutContent: AboutContent = {
-    story: "We are an operator-led holding company that builds and operates focused businesses for the long term. We don't chase trends or buzzwords—we build what's real.",
-    mission: "To create durable, valuable businesses that compound over time by combining operational excellence with clear strategic thinking.",
-    operatingModel: "We acquire, build, and operate businesses end-to-end. Every company in our portfolio receives hands-on operational support, strategic direction, and the resources needed to scale sustainably.",
-    stats: [
-        { label: "Years Operating", value: "10+" },
-        { label: "Portfolio Companies", value: "6" },
-        { label: "Industries", value: "4" },
-    ],
 };
 
 export interface PortfolioItem {
@@ -198,6 +109,51 @@ export const portfolioItems: PortfolioItem[] = [
     },
 ];
 
+export interface PhilosophyItem {
+    statement: string;
+    rotatingWords: string[];
+    outcome: string;
+    description: string;
+    color: string;
+}
+
+export const philosophyContent: PhilosophyItem[] = [
+    {
+        statement: "We build.",
+        rotatingWords: ["INFRASTRUCTURE", "RELATIONSHIPS", "SYSTEMS", "VALUE"],
+        outcome: "Foundations that last decades, not quarters",
+        description: "We build the foundations that outlast quarters. Not temporary solutions—permanent pillars.",
+        color: "#3b82f6",
+    },
+    {
+        statement: "We operate.",
+        rotatingWords: ["WITH INTENT", "AT SCALE", "FOR IMPACT", "WITH PRECISION"],
+        outcome: "Efficient execution across all business verticals",
+        description: "Operations that scale without friction. Systems that grow stronger under pressure.",
+        color: "#8b5cf6",
+    },
+    {
+        statement: "We focus.",
+        rotatingWords: ["ON WHAT MATTERS", "ON GROWTH", "ON SUSTAINABILITY", "ON OUTCOMES"],
+        outcome: "Laser-sharp prioritization drives results",
+        description: "Laser-sharp prioritization drives results. We remove everything that doesn't matter.",
+        color: "#ec4899",
+    },
+    {
+        statement: "We compound.",
+        rotatingWords: ["EFFORTS", "KNOWLEDGE", "NETWORKS", "CAPITAL"],
+        outcome: "Small consistent wins become transformative outcomes",
+        description: "Small wins accumulate into transformation. We play infinite games with finite urgency.",
+        color: "#f59e0b",
+    },
+];
+
+export interface OperatingPrinciple {
+    number: string;
+    title: string;
+    description: string;
+}
+
 export const operatingPrinciples: OperatingPrinciple[] = [
     {
         number: "01",
@@ -221,6 +177,29 @@ export const operatingPrinciples: OperatingPrinciple[] = [
     },
 ];
 
+export interface AboutContent {
+    story: string;
+    mission: string;
+    operatingModel: string;
+    stats: { label: string; value: string }[];
+}
+
+export const aboutContent: AboutContent = {
+    story: "We are an operator-led holding company that builds and operates focused businesses for the long term. We don't chase trends or buzzwords—we build what's real.",
+    mission: "To create durable, valuable businesses that compound over time by combining operational excellence with clear strategic thinking.",
+    operatingModel: "We acquire, build, and operate businesses end-to-end. Every company in our portfolio receives hands-on operational support, strategic direction, and the resources needed to scale sustainably.",
+    stats: [
+        { label: "Years Operating", value: "10+" },
+        { label: "Portfolio Companies", value: "6" },
+        { label: "Industries", value: "4" },
+    ],
+};
+
+export interface TeamMember {
+    name: string;
+    role: string;
+}
+
 export const teamMembers: TeamMember[] = [
     {
         name: "Michael Monfared",
@@ -236,6 +215,11 @@ export const teamMembers: TeamMember[] = [
     },
 ];
 
+export interface Insight {
+    title: string;
+    date: string;
+}
+
 export const insights: Insight[] = [
     {
         title: "The Case Against Growth at All Costs",
@@ -250,3 +234,19 @@ export const insights: Insight[] = [
         date: "2024",
     },
 ];
+
+export interface ContactContent {
+    heading: string;
+    description: string;
+    emailDescription: string;
+    email: string;
+    note: string;
+}
+
+export const contactContent: ContactContent = {
+    heading: "Get in Touch",
+    description: "Let's build something\ntogether.",
+    emailDescription: "Direct Inquiries",
+    email: "hello@thecometcompanies.com",
+    note: "Serious inquiries only.",
+};

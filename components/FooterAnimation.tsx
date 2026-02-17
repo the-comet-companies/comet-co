@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
@@ -24,6 +24,11 @@ const SOCIAL_LINKS = [
 export default function FooterAnimation() {
     const footerRef = useRef<HTMLElement>(null);
     const contentRef = useRef<HTMLDivElement>(null);
+    
+    const [email, setEmail] = useState("");
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isSuccess, setIsSuccess] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const ctx = gsap.context(() => {
@@ -80,6 +85,41 @@ export default function FooterAnimation() {
             duration: 1.2,
             ease: "power3.inOut",
         });
+    };
+
+    const handleSubscribe = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!email) return;
+        
+        setIsSubmitting(true);
+        setError(null);
+        setIsSuccess(false);
+
+        try {
+            const response = await fetch("/api/contact", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    name: "Newsletter Subscriber",
+                    email: email,
+                    subject: "Newsletter Subscription",
+                    message: "New newsletter subscription from footer",
+                }),
+            });
+
+            if (response.ok) {
+                setIsSuccess(true);
+                setEmail("");
+            } else {
+                setError("Something went wrong. Please try again.");
+            }
+        } catch (err) {
+            setError("Network error. Please check your connection.");
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -247,10 +287,14 @@ export default function FooterAnimation() {
                         >
                             Get periodic updates on our progress and new ventures.
                         </p>
-                        <div style={{ display: "flex", gap: "0" }}>
+                        <form onSubmit={handleSubscribe} style={{ display: "flex", gap: "0" }}>
                             <input
                                 type="email"
                                 placeholder="your@email.com"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                disabled={isSubmitting}
+                                required
                                 style={{
                                     fontFamily: "var(--font-sans)",
                                     fontSize: "0.75rem",
@@ -262,9 +306,12 @@ export default function FooterAnimation() {
                                     outline: "none",
                                     flex: 1,
                                     minWidth: 0,
+                                    opacity: isSubmitting ? 0.7 : 1,
                                 }}
                             />
                             <button
+                                type="submit"
+                                disabled={isSubmitting}
                                 style={{
                                     fontFamily: "var(--font-sans)",
                                     fontSize: "0.65rem",
@@ -272,19 +319,30 @@ export default function FooterAnimation() {
                                     textTransform: "uppercase",
                                     letterSpacing: "0.15em",
                                     padding: "0.65rem 1.25rem",
-                                    background: "#fff",
-                                    color: "#000",
+                                    background: isSuccess ? "#22c55e" : "#fff",
+                                    color: isSuccess ? "#fff" : "#000",
                                     border: "none",
-                                    cursor: "pointer",
+                                    cursor: isSubmitting ? "not-allowed" : "pointer",
                                     whiteSpace: "nowrap",
-                                    transition: "opacity 0.3s ease",
+                                    transition: "opacity 0.3s ease, background 0.3s ease",
+                                    opacity: isSubmitting ? 0.7 : 1,
                                 }}
-                                onMouseEnter={(e) => { e.currentTarget.style.opacity = "0.8"; }}
-                                onMouseLeave={(e) => { e.currentTarget.style.opacity = "1"; }}
+                                onMouseEnter={(e) => { if (!isSubmitting) e.currentTarget.style.opacity = "0.8"; }}
+                                onMouseLeave={(e) => { if (!isSubmitting) e.currentTarget.style.opacity = "1"; }}
                             >
-                                Subscribe
+                                {isSubmitting ? "..." : isSuccess ? "Done!" : "Subscribe"}
                             </button>
-                        </div>
+                        </form>
+                        {isSuccess && (
+                            <p style={{ fontSize: "0.7rem", color: "#22c55e", marginTop: "0.5rem" }}>
+                                Thanks for subscribing!
+                            </p>
+                        )}
+                        {error && (
+                            <p style={{ fontSize: "0.7rem", color: "#ef4444", marginTop: "0.5rem" }}>
+                                {error}
+                            </p>
+                        )}
                     </div>
                 </div>
 

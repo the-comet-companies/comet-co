@@ -10,7 +10,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 const rotatingWords = heroContent.rotatingWords;
 
-export default function Hero() {
+export default function Hero({ startAnimation = true }: { startAnimation?: boolean }) {
     const containerRef = useRef<HTMLElement>(null);
     const contentRef = useRef<HTMLDivElement>(null);
     const headlineRef = useRef<HTMLDivElement>(null);
@@ -33,6 +33,9 @@ export default function Hero() {
 
     // Entrance animation
     useLayoutEffect(() => {
+        // If startAnimation is provided and false, do not animate yet
+        if (startAnimation === false) return;
+
         const ctx = gsap.context(() => {
             const tl = gsap.timeline({
                 defaults: { ease: "power3.out" },
@@ -85,7 +88,7 @@ export default function Hero() {
         }, containerRef);
 
         return () => ctx.revert();
-    }, []);
+    }, [startAnimation]);
 
     // Pinned Scroll Interaction + Rotating Words
     useEffect(() => {
@@ -241,7 +244,7 @@ export default function Hero() {
                 className="absolute inset-0 bg-[#fafafa] z-10 origin-top"
             />
 
-            <div className="bg-neutral-200/60 rounded-3xl p-4 sm:p-10 md:p-16 lg:p-20 z-50 relative overflow-hidden min-h-[75vh] sm:min-h-0 flex flex-col justify-center sm:block">
+            <div className="bg-neutral-200/60 rounded-3xl p-4 sm:p-10 md:p-16 lg:p-20 z-50 relative overflow-hidden min-h-[75vh] sm:min-h-[80vh] md:min-h-0 flex flex-col justify-center md:block">
                 <div className="absolute inset-0 z-10">
                     <Scene3D />
                 </div>
@@ -272,7 +275,7 @@ export default function Hero() {
                                                 <span
                                                     key={ri}
                                                     ref={(el) => setOutlineWordRef(el, ri)}
-                                                    className={`${ri === 0 ? 'relative' : 'absolute top-0 left-0'}`}
+                                                    className={`${ri === 0 ? 'relative opacity-100' : 'absolute top-0 left-0 opacity-0'}`}
                                                     style={{
                                                         display: 'inline-block',
                                                         whiteSpace: 'nowrap',
@@ -302,7 +305,7 @@ export default function Hero() {
                                                 <span
                                                     key={ri}
                                                     ref={(el) => setSolidWordRef(el, ri)}
-                                                    className={`${ri === 0 ? 'relative' : 'absolute top-0 left-0'}`}
+                                                    className={`${ri === 0 ? 'relative opacity-100' : 'absolute top-0 left-0 opacity-0'}`}
                                                     style={{
                                                         display: 'inline-block',
                                                         whiteSpace: 'nowrap',
