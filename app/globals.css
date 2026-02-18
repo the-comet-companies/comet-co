@@ -295,33 +295,40 @@
   }
 
   /* ===== Portfolio Card Hover ===== */
-  .portfolio-card:hover .portfolio-card-bg {
+  .portfolio-card:hover .portfolio-card-bg,
+  .portfolio-card.active .portfolio-card-bg {
     opacity: 1 !important;
     transform: scale(1.05);
   }
 
-  .portfolio-card:hover .portfolio-card-overlay {
+  .portfolio-card:hover .portfolio-card-overlay,
+  .portfolio-card.active .portfolio-card-overlay {
     opacity: 1 !important;
   }
 
-  .portfolio-card:hover .portfolio-card-name {
+  .portfolio-card:hover .portfolio-card-name,
+  .portfolio-card.active .portfolio-card-name {
     color: #fff !important;
   }
 
-  .portfolio-card:hover .portfolio-card-tag {
+  .portfolio-card:hover .portfolio-card-tag,
+  .portfolio-card.active .portfolio-card-tag {
     color: #fff !important;
   }
 
-  .portfolio-card:hover .portfolio-card-idx {
+  .portfolio-card:hover .portfolio-card-idx,
+  .portfolio-card.active .portfolio-card-idx {
     color: rgba(255, 255, 255, 0.6) !important;
   }
 
-  .portfolio-card:hover .portfolio-card-arrow {
+  .portfolio-card:hover .portfolio-card-arrow,
+  .portfolio-card.active .portfolio-card-arrow {
     opacity: 1 !important;
     transform: translateX(0) !important;
   }
 
-  .portfolio-card:hover .portfolio-card-url {
+  .portfolio-card:hover .portfolio-card-url,
+  .portfolio-card.active .portfolio-card-url {
     opacity: 1 !important;
     transform: translateY(0) !important;
   }

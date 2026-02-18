@@ -8,6 +8,7 @@ import {
     operatingPrinciples,
     teamMembers,
     insights,
+    founderContent,
 } from "@/lib/data";
 import { useEffect, useState } from "react";
 
@@ -65,7 +66,7 @@ export default function ChangelogPage() {
             <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[1fr_250px] gap-12">
                 {/* Main Content */}
                 <div className="max-w-4xl">
-                    <h1 className="text-4xl font-bold mb-4">Content Inventory</h1>
+                    <h1 className="text-4xl font-bold mb-4">TCC Content</h1>
                     <p className="text-neutral-500 mb-12 border-b border-neutral-200 pb-8">
                         This page displays all textual content currently used on the website.
                         Use this as a reference when requesting text changes.
@@ -82,6 +83,10 @@ export default function ChangelogPage() {
                             <div key={item.slug} className="mb-8 border-b border-neutral-100 pb-6 last:border-0">
                                 <h3 className="text-xl font-bold mb-2">{item.name}</h3>
                                 <ContentItem label="Tagline" value={item.tagline} />
+                                <ContentItem label="Industry" value={item.industry} />
+                                {item.location && <ContentItem label="Location" value={item.location} />}
+                                <ContentItem label="Mission" value={item.mission} />
+                                {item.services && <ContentItem label="Services" value={item.services.join(", ")} />}
                                 <ContentItem label="What It Does" value={item.whatItDoes} />
                                 <ContentItem label="Problem It Solves" value={item.problemItSolves} />
                                 <ContentItem label="Comet Role" value={item.cometRole} />
@@ -135,6 +140,9 @@ export default function ChangelogPage() {
                                 <div key={member.name} className="bg-neutral-50 p-4 rounded-lg">
                                     <div className="font-bold">{member.name}</div>
                                     <div className="text-sm text-neutral-500">{member.role}</div>
+                                    {member.role === "CEO" && (
+                                        <CeoAccordion />
+                                    )}
                                 </div>
                             ))}
                         </div>
@@ -207,6 +215,50 @@ function ContentItem({ label, value }: { label: string; value: string }) {
                 </div>
             ) : (
                 <p className="text-neutral-800 whitespace-pre-wrap">{value}</p>
+            )}
+        </div>
+    );
+}
+
+function CeoAccordion() {
+    const [open, setOpen] = useState(false);
+
+    return (
+        <div className="mt-3">
+            <button
+                onClick={() => setOpen(!open)}
+                className="cursor-pointer flex items-center gap-2 text-xs font-medium text-neutral-500 hover:text-neutral-800 transition-colors duration-200"
+                style={{ background: "none", border: "none", padding: 0 }}
+            >
+                <span>{open ? "Hide Details" : "View Details"}</span>
+                <svg
+                    width="10" height="10" viewBox="0 0 14 14" fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    style={{
+                        transition: "transform 0.3s ease",
+                        transform: open ? "rotate(180deg)" : "rotate(0deg)",
+                    }}
+                >
+                    <path d="M3 5L7 9L11 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+            </button>
+
+            {open && (
+                <div className="mt-3 pt-3 border-t border-neutral-200">
+                    <ContentItem label="Title" value={founderContent.title} />
+                    <ContentItem label="Blurb" value={founderContent.blurb} />
+                    <div className="mt-2">
+                        <h4 className="text-xs font-bold text-neutral-400 uppercase tracking-wider mb-2">Traits</h4>
+                        <div className="grid grid-cols-1 gap-3">
+                            {founderContent.traits.map((trait) => (
+                                <div key={trait.label} className="bg-white p-3 rounded border border-neutral-200">
+                                    <div className="font-semibold text-sm">{trait.label}</div>
+                                    <div className="text-sm text-neutral-600">{trait.description}</div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
             )}
         </div>
     );

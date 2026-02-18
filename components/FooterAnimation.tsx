@@ -24,11 +24,14 @@ const SOCIAL_LINKS = [
 export default function FooterAnimation() {
     const footerRef = useRef<HTMLElement>(null);
     const contentRef = useRef<HTMLDivElement>(null);
-    
+
     const [email, setEmail] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
     const [error, setError] = useState<string | null>(null);
+
+    const formWrapperRef = useRef<HTMLDivElement>(null);
+    const successMessageRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const ctx = gsap.context(() => {
@@ -90,10 +93,10 @@ export default function FooterAnimation() {
     const handleSubscribe = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!email) return;
-        
+
         setIsSubmitting(true);
         setError(null);
-        setIsSuccess(false);
+        // Don't set isSuccess yet, wait for animation
 
         try {
             const response = await fetch("/api/contact", {
@@ -110,17 +113,76 @@ export default function FooterAnimation() {
             });
 
             if (response.ok) {
-                setIsSuccess(true);
                 setEmail("");
+
+                // Animate out form, animate in success
+                if (formWrapperRef.current && successMessageRef.current) {
+                    const tl = gsap.timeline();
+
+                    tl.to(formWrapperRef.current, {
+                        opacity: 0,
+                        y: -10,
+                        duration: 0.4,
+                        ease: "power2.in",
+                        onComplete: () => {
+                            if (formWrapperRef.current) formWrapperRef.current.style.display = "none";
+                            if (successMessageRef.current) successMessageRef.current.style.display = "block";
+                            setIsSuccess(true);
+                        }
+                    })
+                        .fromTo(successMessageRef.current,
+                            { opacity: 0, y: 10 },
+                            { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" }
+                        );
+                }
             } else {
                 setError("Something went wrong. Please try again.");
+                setIsSuccess(false);
             }
         } catch (err) {
             setError("Network error. Please check your connection.");
+            setIsSuccess(false);
         } finally {
             setIsSubmitting(false);
         }
     };
+
+    // Auto-revert success message after delay
+    useEffect(() => {
+        if (isSuccess) {
+            const timer = setTimeout(() => {
+                if (formWrapperRef.current && successMessageRef.current) {
+                    const tl = gsap.timeline();
+
+                    tl.to(successMessageRef.current, {
+                        opacity: 0,
+                        y: -10,
+                        duration: 0.4,
+                        ease: "power2.in",
+                        onComplete: () => {
+                            if (successMessageRef.current) successMessageRef.current.style.display = "none";
+                            if (formWrapperRef.current) {
+                                formWrapperRef.current.style.display = "block";
+                                // Reset z-index or other props if needed, but display block is enough for now
+                            }
+                        }
+                    })
+                        .fromTo(formWrapperRef.current,
+                            { opacity: 0, y: 10 },
+                            {
+                                opacity: 1,
+                                y: 0,
+                                duration: 0.5,
+                                ease: "power2.out",
+                                onComplete: () => setIsSuccess(false)
+                            }
+                        );
+                }
+            }, 4000); // Wait 4 seconds before reverting
+
+            return () => clearTimeout(timer);
+        }
+    }, [isSuccess]);
 
     return (
         <footer
@@ -276,73 +338,111 @@ export default function FooterAnimation() {
                         >
                             Stay Updated
                         </h4>
-                        <p
+
+                        {/* Form Wrapper */}
+                        <div ref={formWrapperRef}>
+                            <p
+                                style={{
+                                    fontFamily: "var(--font-sans)",
+                                    fontSize: "0.8rem",
+                                    color: "#9ca3af",
+                                    lineHeight: 1.6,
+                                    marginBottom: "1.25rem",
+                                }}
+                            >
+                                Get periodic updates on our progress and new ventures.
+                            </p>
+                            <form onSubmit={handleSubscribe} style={{ display: "flex", gap: "0" }}>
+                                <input
+                                    type="email"
+                                    placeholder="your@email.com"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    disabled={isSubmitting}
+                                    required
+                                    style={{
+                                        fontFamily: "var(--font-sans)",
+                                        fontSize: "0.75rem",
+                                        padding: "0.65rem 1rem",
+                                        background: "rgba(255,255,255,0.06)",
+                                        border: "1px solid rgba(255,255,255,0.12)",
+                                        borderRight: "none",
+                                        color: "#fff",
+                                        outline: "none",
+                                        flex: 1,
+                                        minWidth: 0,
+                                        opacity: isSubmitting ? 0.7 : 1,
+                                    }}
+                                />
+                                <button
+                                    type="submit"
+                                    disabled={isSubmitting}
+                                    style={{
+                                        fontFamily: "var(--font-sans)",
+                                        fontSize: "0.65rem",
+                                        fontWeight: 700,
+                                        textTransform: "uppercase",
+                                        letterSpacing: "0.15em",
+                                        padding: "0.65rem 1.25rem",
+                                        background: "#fff",
+                                        color: "#000",
+                                        border: "none",
+                                        cursor: isSubmitting ? "not-allowed" : "pointer",
+                                        whiteSpace: "nowrap",
+                                        transition: "opacity 0.3s ease, background 0.3s ease",
+                                        opacity: isSubmitting ? 0.7 : 1,
+                                    }}
+                                    onMouseEnter={(e) => { if (!isSubmitting) e.currentTarget.style.opacity = "0.8"; }}
+                                    onMouseLeave={(e) => { if (!isSubmitting) e.currentTarget.style.opacity = "1"; }}
+                                >
+                                    {isSubmitting ? "..." : "Subscribe"}
+                                </button>
+                            </form>
+                            {error && (
+                                <p style={{ fontSize: "0.7rem", color: "#ef4444", marginTop: "0.5rem" }}>
+                                    {error}
+                                </p>
+                            )}
+                        </div>
+
+                        {/* Success Message */}
+                        <div
+                            ref={successMessageRef}
                             style={{
-                                fontFamily: "var(--font-sans)",
-                                fontSize: "0.8rem",
-                                color: "#9ca3af",
-                                lineHeight: 1.6,
-                                marginBottom: "1.25rem",
+                                display: "none",
+                                opacity: 0
                             }}
                         >
-                            Get periodic updates on our progress and new ventures.
-                        </p>
-                        <form onSubmit={handleSubscribe} style={{ display: "flex", gap: "0" }}>
-                            <input
-                                type="email"
-                                placeholder="your@email.com"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                disabled={isSubmitting}
-                                required
-                                style={{
-                                    fontFamily: "var(--font-sans)",
-                                    fontSize: "0.75rem",
-                                    padding: "0.65rem 1rem",
-                                    background: "rgba(255,255,255,0.06)",
-                                    border: "1px solid rgba(255,255,255,0.12)",
-                                    borderRight: "none",
-                                    color: "#fff",
-                                    outline: "none",
-                                    flex: 1,
-                                    minWidth: 0,
-                                    opacity: isSubmitting ? 0.7 : 1,
-                                }}
-                            />
-                            <button
-                                type="submit"
-                                disabled={isSubmitting}
-                                style={{
-                                    fontFamily: "var(--font-sans)",
-                                    fontSize: "0.65rem",
-                                    fontWeight: 700,
-                                    textTransform: "uppercase",
-                                    letterSpacing: "0.15em",
-                                    padding: "0.65rem 1.25rem",
-                                    background: isSuccess ? "#22c55e" : "#fff",
-                                    color: isSuccess ? "#fff" : "#000",
-                                    border: "none",
-                                    cursor: isSubmitting ? "not-allowed" : "pointer",
-                                    whiteSpace: "nowrap",
-                                    transition: "opacity 0.3s ease, background 0.3s ease",
-                                    opacity: isSubmitting ? 0.7 : 1,
-                                }}
-                                onMouseEnter={(e) => { if (!isSubmitting) e.currentTarget.style.opacity = "0.8"; }}
-                                onMouseLeave={(e) => { if (!isSubmitting) e.currentTarget.style.opacity = "1"; }}
-                            >
-                                {isSubmitting ? "..." : isSuccess ? "Done!" : "Subscribe"}
-                            </button>
-                        </form>
-                        {isSuccess && (
-                            <p style={{ fontSize: "0.7rem", color: "#22c55e", marginTop: "0.5rem" }}>
-                                Thanks for subscribing!
+                            <div style={{
+                                width: "32px",
+                                height: "32px",
+                                background: "rgba(34, 197, 94, 0.1)",
+                                borderRadius: "50%",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                marginBottom: "1rem",
+                                color: "#22c55e"
+                            }}>
+                                ✓
+                            </div>
+                            <p style={{
+                                fontFamily: "var(--font-sans)",
+                                fontSize: "0.9rem",
+                                fontWeight: 500,
+                                color: "#fff",
+                                marginBottom: "0.25rem"
+                            }}>
+                                You&apos;re on the list.
                             </p>
-                        )}
-                        {error && (
-                            <p style={{ fontSize: "0.7rem", color: "#ef4444", marginTop: "0.5rem" }}>
-                                {error}
+                            <p style={{
+                                fontFamily: "var(--font-sans)",
+                                fontSize: "0.75rem",
+                                color: "#9ca3af"
+                            }}>
+                                We&apos;ll keep you posted.
                             </p>
-                        )}
+                        </div>
                     </div>
                 </div>
 

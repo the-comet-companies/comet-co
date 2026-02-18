@@ -100,6 +100,7 @@ export default function Insights() {
                                     cursor: "pointer",
                                     opacity: 0,
                                     transition: "opacity 0.3s ease",
+                                    willChange: "opacity, transform", // Hint for browser optimization
                                 }}
                                 onMouseEnter={(e) => {
                                     (e.currentTarget as HTMLDivElement).style.opacity = "0.6";

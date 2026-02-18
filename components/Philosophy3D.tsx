@@ -12,17 +12,17 @@ gsap.registerPlugin(ScrollTrigger);
 
 import { philosophyContent } from "@/lib/data";
 
-function StoryParticles({ activeIndex, scrollProgress }: { activeIndex: number; scrollProgress: number }) {
+function StoryParticles({ activeIndex, scrollProgress, visible }: { activeIndex: number; scrollProgress: number; visible: boolean }) {
   const pointsRef = useRef<THREE.Points>(null);
-  const count = 3000;
+  const count = 1800; // Reduced from 3000 for better performance
 
   const [targetPositions, setTargetPositions] = useState<Float32Array | null>(null);
+  // Let's replace the whole component's beginning up to useFrame to ensure `count` is updated.
+
   const particleData = useMemo(() => {
     const temp = [];
     for (let i = 0; i < count; i++) {
-      temp.push({
-        delay: Math.random() * 0.5,
-      });
+      temp.push({ delay: Math.random() * 0.5 });
     }
     return temp;
   }, []);
@@ -91,7 +91,6 @@ function StoryParticles({ activeIndex, scrollProgress }: { activeIndex: number; 
       const v = (Math.random() - 0.5) * 1.5; // Width of the strip
       const R = 3;
 
-      // Mobius strip parametric equations
       positions[i * 3] = (R + v * Math.cos(u / 2)) * Math.cos(u);
       positions[i * 3 + 1] = (R + v * Math.cos(u / 2)) * Math.sin(u);
       positions[i * 3 + 2] = v * Math.sin(u / 2);
@@ -115,7 +114,8 @@ function StoryParticles({ activeIndex, scrollProgress }: { activeIndex: number; 
   const initialPositions = useMemo(() => generateSpherePositions(), [generateSpherePositions]);
 
   useFrame(() => {
-    if (!pointsRef.current || !targetPositions) return;
+    // If not visible, skip the expensive loop
+    if (!visible || !pointsRef.current || !targetPositions) return;
 
     const positions = pointsRef.current.geometry.attributes.position.array as Float32Array;
     const morphProgress = scrollProgress;
@@ -154,13 +154,13 @@ function StoryParticles({ activeIndex, scrollProgress }: { activeIndex: number; 
   );
 }
 
-function Scene({ activeIndex, scrollProgress }: { activeIndex: number; scrollProgress: number }) {
+function Scene({ activeIndex, scrollProgress, visible }: { activeIndex: number; scrollProgress: number; visible: boolean }) {
   return (
     <>
       <ambientLight intensity={0.4} />
       <pointLight position={[10, 10, 10]} intensity={1} color="#ffffff" />
       <pointLight position={[-10, -10, -10]} intensity={0.5} color="#8888ff" />
-      <StoryParticles activeIndex={activeIndex} scrollProgress={scrollProgress} />
+      <StoryParticles activeIndex={activeIndex} scrollProgress={scrollProgress} visible={visible} />
       <EffectComposer>
         <Bloom intensity={0.5} luminanceThreshold={0.1} luminanceSmoothing={0.9} mipmapBlur />
       </EffectComposer>
@@ -235,7 +235,7 @@ export default function Philosophy3D() {
           >
             <color attach="background" args={["#fafafa"]} />
             <fog attach="fog" args={["#fafafa", 4, 12]} />
-            <Scene activeIndex={activeIndex} scrollProgress={scrollProgress} />
+            <Scene activeIndex={activeIndex} scrollProgress={scrollProgress} visible={isPinned} />
           </Canvas>
         </div>
 

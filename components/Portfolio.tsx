@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { portfolioItems } from "@/lib/data";
@@ -12,6 +13,13 @@ gsap.registerPlugin(ScrollTrigger);
 export default function Portfolio() {
     const containerRef = useRef<HTMLElement>(null);
     const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
+    const [activeSlug, setActiveSlug] = useState<string | null>(null);
+    const [isTouchDevice, setIsTouchDevice] = useState(false);
+
+    useEffect(() => {
+        // Detect touch device
+        setIsTouchDevice("ontouchstart" in window || navigator.maxTouchPoints > 0);
+    }, []);
 
     useEffect(() => {
         const ctx = gsap.context(() => {
@@ -81,6 +89,9 @@ export default function Portfolio() {
                         item={item}
                         index={index}
                         ref={(el) => { cardsRef.current[index] = el; }}
+                        isActive={activeSlug === item.slug}
+                        isTouchDevice={isTouchDevice}
+                        onTap={(slug) => setActiveSlug(slug)}
                     />
                 ))}
             </div>
@@ -93,15 +104,38 @@ import { forwardRef } from "react";
 interface PortfolioCardProps {
     item: (typeof portfolioItems)[number];
     index: number;
+    isActive: boolean;
+    isTouchDevice: boolean;
+    onTap: (slug: string) => void;
 }
 
 const PortfolioCard = forwardRef<HTMLDivElement, PortfolioCardProps>(
-    function PortfolioCard({ item, index }, ref) {
+    function PortfolioCard({ item, index, isActive, isTouchDevice, onTap }, ref) {
+        const router = useRouter();
+
+        const handleClick = useCallback((e: React.MouseEvent) => {
+            if (!isTouchDevice) return; // Desktop — let Link handle it normally
+
+            e.preventDefault();
+
+            if (isActive) {
+                // Second tap → navigate
+                router.push(`/portfolio/${item.slug}`);
+            } else {
+                // First tap → activate (show hover state)
+                onTap(item.slug);
+            }
+        }, [isTouchDevice, isActive, item.slug, onTap, router]);
+
         return (
             <div ref={ref} style={{ opacity: 0 }}>
-                <Link href={`/portfolio/${item.slug}`} style={{ textDecoration: "none", color: "inherit" }}>
+                <Link
+                    href={`/portfolio/${item.slug}`}
+                    style={{ textDecoration: "none", color: "inherit" }}
+                    onClick={handleClick}
+                >
                     <div
-                        className="portfolio-card"
+                        className={`portfolio-card${isActive ? " active" : ""}`}
                         style={{
                             position: "relative",
                             overflow: "hidden",
@@ -114,7 +148,7 @@ const PortfolioCard = forwardRef<HTMLDivElement, PortfolioCardProps>(
                             padding: "2.5rem",
                         }}
                     >
-                        {/* Background screenshot — hidden by default, revealed on hover */}
+                        {/* Background screenshot — hidden by default, revealed on hover/active */}
                         <div
                             className="portfolio-card-bg"
                             style={{

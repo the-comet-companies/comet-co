@@ -69,7 +69,7 @@ export default function OperatingPrinciples() {
                     padding: "0 2rem",
                 }}
             >
-                <div ref={headerRef}>
+                <div ref={headerRef} style={{ willChange: "opacity, transform" }}>
                     <TextReveal
                         text="Operating Principles"
                         as="h2"
@@ -92,6 +92,7 @@ export default function OperatingPrinciples() {
                                 key={principle.number}
                                 data-principle
                                 className="bg-neutral-50 py-12 px-8"
+                                style={{ willChange: "opacity, transform" }}
                             >
                                 <h3
                                     style={{

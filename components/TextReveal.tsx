@@ -26,16 +26,18 @@ export default function TextReveal({
         if (!containerRef.current || !textRef.current) return;
 
         const ctx = gsap.context(() => {
-            // Set initial state
+            // Set initial state - slide up from 100%
             gsap.set(textRef.current, {
-                clipPath: "inset(0 100% 0 0)",
+                y: "100%",
+                opacity: 0,
             });
 
             // Animate on scroll
             gsap.to(textRef.current, {
-                clipPath: "inset(0 0% 0 0)",
+                y: "0%",
+                opacity: 1,
                 duration: 1,
-                ease: "power3.inOut",
+                ease: "power3.out",
                 scrollTrigger: {
                     trigger: containerRef.current,
                     start: "top 85%",
@@ -54,14 +56,15 @@ export default function TextReveal({
             style={{
                 ...style,
                 display: "inline-block",
-                overflow: "hidden",
+                overflow: "hidden", // Essential for the slide-up effect
+                verticalAlign: "bottom", // Fix inline-block alignment issues
             }}
         >
             <span
                 ref={textRef}
                 style={{
                     display: "inline-block",
-                    willChange: "clip-path",
+                    willChange: "transform, opacity",
                 }}
             >
                 {text}
